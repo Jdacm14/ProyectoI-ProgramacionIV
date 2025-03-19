@@ -1,0 +1,143 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0fdf4;
+    color: #1b4332;
+    margin: 0;
+    padding: 0;
+}
+
+/* Encabezado */
+.encabezado {
+    background-color: #40916c;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.titulo {
+    margin: 0;
+    font-size: 24px;
+}
+
+/* Contenedor principal */
+.contenedorListado {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Filtros */
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.etiquetaFormulario {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #1b4332;
+}
+
+.entradaFormulario {
+    padding: 10px;
+    border: 1px solid #a3c4bc;
+    border-radius: 5px;
+    font-size: 16px;
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Tabla */
+.tablaMedicos {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #40916c;
+    color: white;
+}
+
+tr:hover {
+    background-color: #d8f3dc;
+}
+
+/* Estados */
+.estado {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.aprobado {
+    background-color: #52b788;
+    color: white;
+}
+
+.pendiente {
+    background-color: #e9c46a;
+    color: #1b4332;
+}
+
+/* Botón Aprobar */
+.botonAprobar {
+    background-color: #40916c;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.botonAprobar:hover {
+    background-color: #2d6a4f;
+}
+
+.botonAprobar:disabled {
+    background-color: #a3c4bc;
+    cursor: not-allowed;
+}
+
+/* Footer */
+.piePagina {
+    text-align: center;
+    padding: 10px;
+    background-color: #40916c;
+    color: white;
+    margin-top: 20px;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .filtros {
+        flex-direction: column;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+}

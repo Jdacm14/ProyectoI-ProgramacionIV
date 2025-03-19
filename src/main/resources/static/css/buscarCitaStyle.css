@@ -1,0 +1,155 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #eaf4f0;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+.titulo {
+    margin: 0;
+}
+
+.contenedorBusqueda {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Filtros */
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.filtros label {
+    width: 100%;
+    font-weight: bold;
+    color: #1b4332;
+}
+
+.filtros .entradaFormulario {
+    width: calc(50% - 10px);
+    padding: 10px;
+    border: 1px solid #a3c4bc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+
+
+/* Lista de médicos */
+.listaMedicos {
+    margin-top: 20px;
+}
+
+.subtitulo {
+    color: #40916c;
+}
+
+/* Tarjeta de médico */
+.tarjetaMedico {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.nombreMedico {
+    margin: 0;
+    font-size: 18px;
+    color: #2d6a4f;
+}
+
+.especialidad,
+.ubicacion {
+    color: #555;
+    margin: 5px 0;
+}
+
+/* Horarios */
+.horarios {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.espacio {
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+.espacio.disponible {
+    background-color: #52b788;
+    color: white;
+}
+
+.espacio.disponible:hover {
+    background-color: #40916c;
+}
+
+.espacio.reservado {
+    background-color: #bbbbbb;
+    color: white;
+    cursor: not-allowed;
+}
+
+/* Botones de acción */
+.acciones {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.botonReservar,
+.botonHorario {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.botonReservar {
+    background-color: #40916c;
+    color: white;
+}
+
+.botonReservar:hover {
+    background-color: #2d6a4f;
+}
+
+.botonHorario {
+    background-color: #fca311;
+    color: white;
+}
+
+.botonHorario:hover {
+    background-color: #e68a00;
+}
+
+@media (max-width: 768px) {
+    .filtros {
+        flex-direction: column;
+    }
+
+    .filtros .entradaFormulario {
+        width: 100%;
+    }
+}

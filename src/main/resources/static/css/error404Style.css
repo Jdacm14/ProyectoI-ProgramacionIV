@@ -1,0 +1,37 @@
+
+.error404 {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.error404 img {
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+.error404 h2 {
+    font-size: 28px;
+    color: #40916c;
+    margin-bottom: 10px;
+}
+
+.error404 p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+
+.boton-volver {
+    display: inline-block;
+    background: #40916c;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+.boton-volver:hover {
+    background: #2d6a4f;
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Citas</title>
+    <link rel="stylesheet" href="css/historicoCitasStyle.css">
+</head>
+<body>
+    
+    <main class="contenedorCitas">
+        <h1 class="titulo">Histórico de Citas</h1>
+        <section class="filtros">
+            <label for="filtroEstado" class="etiquetaFormulario">Filtrar por estado:</label>
+            <select class="entradaFormulario" id="filtroEstado">
+                <option value="todas">Todas</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="completada">Completada</option>
+            </select>
+            
+            <label for="filtroMedico" class="etiquetaFormulario">Filtrar por médico:</label>
+            <input type="text" id="filtroMedico" class="entradaFormulario" placeholder="Ingrese nombre del médico">
+        </section>
+        
+        <!-- Tabla de Citas -->
+        <section class="tablaCitas">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Médico</th>
+                        <th>Especialidad</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dr. Juan Pérez</td>
+                        <td>Cardiología</td>
+                        <td>2025-03-10</td>
+                        <td>10:00 AM</td>
+                        <td><span class="estado completada">Completada</span></td>
+                    </tr>
+                    <tr>
+                        <td>Dra. María López</td>
+                        <td>Dermatología</td>
+                        <td>2025-03-08</td>
+                        <td>02:00 PM</td>
+                        <td><span class="estado pendiente">Pendiente</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    
+  
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="http://localhost:8080/css/loginRegistroStyle.css">
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+<div class="contenedorPrincipal">
+    <div class="formulario">
+        <h2 class="titulo">Desea iniciar sesión como</h2>
+
+        <!-- Formulario único para manejar diferentes tipos de usuario -->
+        <form class="contenidoFormulario" action="/prelogin" method="post">
+            <input type="hidden" name="tipo" value="paciente">
+            <button type="submit" class="botonEnviar">Paciente</button>
+        </form>
+
+        <form class="contenidoFormulario" action="/prelogin" method="post">
+            <input type="hidden" name="tipo" value="medico">
+            <button type="submit" class="botonEnviar">Médico</button>
+        </form>
+
+        <!-- Enlace para Administrador más discreto -->
+        <p class="enlaceFormulario">¿Eres administrador? <a href="administrador/login" class="enlace">Inicia sesión aquí</a></p>
+    </div>
+</div>
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="http://localhost:8080/css/loginRegistroStyle.css">
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+<div class="contenedorPrincipal">
+    <div class="formulario">
+        <h2 class="titulo">Iniciar Sesión</h2>
+
+        <!-- Si hay un mensaje de error, lo mostramos aquí -->
+        <div th:if="${error}" class="mensajeError" th:text="${error}"></div>
+
+        <!-- Formulario para el login -->
+        <form class="contenidoFormulario" method="post">
+            <div class="grupoFormulario">
+                <label for="idUsuario" class="etiquetaFormulario">ID de Usuario</label>
+                <input type="text" class="entradaFormulario" id="idUsuario" name="identificacion" required>
+            </div>
+            <div class="grupoFormulario">
+                <label for="contrasenaUsuario" class="etiquetaFormulario">Contraseña</label>
+                <input type="password" class="entradaFormulario" id="contrasenaUsuario" name="contrasenna" required>
+            </div>
+            <button type="submit" class="botonEnviar">Ingresar</button>
+        </form>
+
+        <p class="enlaceFormulario">¿No tienes cuenta? <a href="registro" class="enlace">Regístrate aquí</a></p>
+    </div>
+</div>
+
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

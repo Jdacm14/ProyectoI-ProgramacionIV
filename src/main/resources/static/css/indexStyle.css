@@ -1,0 +1,85 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0fdf4;
+    color: #1b4332;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Contenedor principal */
+.contenedorHome {
+    flex: 1;
+    width: 90%;
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+}
+
+/* Descripción */
+.descripcion h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.descripcion p {
+    font-size: 16px;
+    color: #2d6a4f;
+}
+
+/* Botones */
+.opciones {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.botonPrincipal, .botonSecundario {
+    padding: 15px;
+    width: 80%;
+    max-width: 300px;
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.botonPrincipal {
+    background-color: #40916c;
+    color: white;
+}
+
+.botonPrincipal:hover {
+    background-color: #2d6a4f;
+}
+
+.botonSecundario {
+    background-color: #f0efeb;
+    color: #1b4332;
+    border: 2px solid #40916c;
+}
+
+.botonSecundario:hover {
+    background-color: #d8f3dc;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .descripcion h2 {
+        font-size: 22px;
+    }
+
+    .descripcion p {
+        font-size: 14px;
+    }
+
+    .botonPrincipal, .botonSecundario {
+        width: 90%;
+    }
+}

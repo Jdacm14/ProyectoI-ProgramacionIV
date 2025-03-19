@@ -1,0 +1,59 @@
+
+.filtros {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.campoBusqueda {
+    display: flex;
+    flex-direction: column;
+}
+
+.select-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.entradaFormulario {
+    padding: 8px 12px;
+    border: 1px solid #40916c;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+
+.input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #40916c;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+/* Input con icono de búsqueda */
+.input-container input {
+    border: none;
+    padding: 8px;
+    outline: none;
+    flex-grow: 1;
+}
+
+/* Botón de búsqueda */
+.botonBusqueda {
+    background-color: #40916c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.botonBusqueda:hover {
+    background-color: #2d6a4f;
+}
+
+

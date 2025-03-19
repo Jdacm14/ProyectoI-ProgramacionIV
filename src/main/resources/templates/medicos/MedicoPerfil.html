@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Medico</title>
+    <link rel="stylesheet" href="css/indexStyle.css">
+    <link rel="stylesheet" href="css/perfilMedicoStyle.css">
+</head>
+<body>
+    <div class="contenedorPerfil">
+        <img src="img/PPSnape.jpg" alt="Foto de Perfil" class="imagenPerfil">
+        <form class="contenidoFormulario">
+            <div class="grupoFormulario">
+                <label for="nombre" class="etiquetaFormulario">Nombre</label>
+                <input type="text" class="entradaFormulario" id="nombre" required>
+            </div>
+            <div class="grupoFormulario">
+                <label for="especialidad" class="etiquetaFormulario">Especialidad</label>
+                <input type="text" class="entradaFormulario" id="especialidad" required>
+            </div>
+            <div class="grupoFormulario">
+                <label for="presentacion" class="etiquetaFormulario">Presentación</label>
+                <textarea class="entradaFormulario" id="presentacion" rows="3" required></textarea>
+            </div>
+            <div class="grupoFormulario">
+                <label for="costo" class="etiquetaFormulario">Costo de Consulta</label>
+                <input type="number" class="entradaFormulario" id="costo" required>
+            </div>
+            <div class="grupoFormulario">
+                <label for="ubicacion" class="etiquetaFormulario">Ubicación</label>
+                <input type="text" class="entradaFormulario" id="ubicacion" required>
+            </div>
+            <div class="grupoFormulario">
+                <label for="fotoPerfil" class="etiquetaFormulario">Foto de Perfil</label>
+                <input type="file" class="entradaFormulario" id="fotoPerfil">
+            </div>
+            <button type="submit" class="botonEnviar">Guardar Cambios</button>
+        </form>
+    </div>
+       
+</body>
+</html>

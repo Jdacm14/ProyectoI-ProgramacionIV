@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Citas</title>
+
+    <link rel="stylesheet" href="css/gestionCitasStyle.css">
+</head>
+<body>
+    <h1 class="titulo">Dr. Juan Pérez - Gestión de Citas</h1>
+    
+    <main class="contenedorCitas">
+        <section class="filtros">
+            <!-- Filtro por estado con icono -->
+            <div class="select-con-icono">
+                <label for="filtroEstado" class="etiquetaFormulario">Filtrar por estado:</label>
+                <select class="entradaFormulario" id="filtroEstado">
+                    <option value="todas">Todas</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="completada">Completada</option>
+                </select>
+               
+            </div>
+
+            <!-- Filtro por paciente con botón de búsqueda -->
+            <div class="input-con-icono">
+                <label for="filtroPaciente" class="etiquetaFormulario">Filtrar por paciente:</label>
+                <input type="text" id="filtroPaciente" class="entradaFormulario" placeholder="Ingrese nombre del paciente">
+
+            </div>
+        </section>
+        
+        <section class="tablaCitas">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Estado</th>
+                        <th>Anotaciones</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ana Gómez</td>
+                        <td>2025-03-12</td>
+                        <td>09:00 AM</td>
+                        <td><span class="estado pendiente">Pendiente</span></td>
+                        <td><textarea class="entradaFormulario"></textarea></td>
+                        <td><button class="botonEnviar">Completar</button></td>
+                    </tr>
+                    <tr>
+                        <td>Carlos Pérez</td>
+                        <td>2025-03-11</td>
+                        <td>11:30 AM</td>
+                        <td><span class="estado completada">Completada</span></td>
+                        <td><textarea class="entradaFormulario" disabled>Consulta realizada con éxito</textarea></td>
+                        <td><button class="botonEnviar" disabled>Completada</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html>

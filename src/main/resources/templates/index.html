@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Gestión de Citas Médicas</title>
+    <link rel="stylesheet" href="css/indexStyle.css">
+</head>
+<body>
+    <div th:replace="~{layouts/header}"></div>
+
+    <main class="contenedorHome">
+        <section class="descripcion">
+            <h2>Bienvenido</h2>
+            <p>Gestione sus citas médicas de manera rápida y sencilla. Busque médicos, reserve citas y acceda a su historial de consultas.</p>
+        </section>
+
+        <section class="opciones">
+            <a th:href="@{/buscar-cita}" class="botonPrincipal">Buscar Cita</a>
+            <a th:href="@{/prelogin}" class="botonSecundario">Iniciar Sesión / Registrarse</a>
+        </section>
+    </main>
+
+    <div th:replace="~{layouts/footer}"></div>
+
+</body>
+</html>
