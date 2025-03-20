@@ -24,6 +24,15 @@ public class MedicoModel {
         this.ubicacion = "";
     }
 
+    public MedicoModel(String identificacion, String nombre, String contrasenna, boolean activo, String especialidad, String ubicacion) {
+        this.identificacion = identificacion;
+        this.nombre = nombre;
+        this.contrasenna = contrasenna;
+        this.activo = activo;
+        this.especialidad = especialidad;
+        this.ubicacion = ubicacion;
+    }
+
     // getters
     public String getIdentificacion() {return identificacion;}
     public String getNombre() {return nombre;}
