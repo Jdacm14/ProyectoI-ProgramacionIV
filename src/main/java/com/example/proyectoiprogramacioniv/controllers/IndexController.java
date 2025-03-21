@@ -20,6 +20,11 @@ public class IndexController {
         return "index";
     }
 
+    @GetMapping("/index")
+    public String inicio() {
+        return "index";
+    }
+
     @GetMapping("/buscar-cita")
     public String buscarCita() {
         return "pacientes/PacienteBuscarCita"; // Coincide con la ubicación en templates/pacientes/
