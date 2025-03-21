@@ -38,6 +38,7 @@ public class MedicoController {
         if (medicoModel.isPresent()) {
             if (medicoService.validarContrasenna(identificacion, contrasenna)) {
                 model.addAttribute("medico", medicoModel.get());
+                model.addAttribute("role", "medico"); // Establecemos el rol
                 return "medicos/MedicoPerfil"; // Redirige al perfil del médico
             } else {
                 model.addAttribute("error", "Contraseña incorrecta");

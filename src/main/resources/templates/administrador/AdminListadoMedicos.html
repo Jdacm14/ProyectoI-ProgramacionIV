@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listado de Médicos</title>
-    <link rel="stylesheet" href="css/listadoMedicoStyle.css">
+    <link rel="stylesheet" th:href="@{/css/listadoMedicoStyle.css}">
 </head>
 <body>
+<div th:replace="~{layouts/header}"></div>
     <main class="contenedorListado">
         <h1>Listado de Médicos</h1>
         <!-- Filtros -->
@@ -49,8 +50,9 @@
             </table>
         </section>
     </main>
-    
-    
+
+<div th:replace="~{layouts/footer}"></div>
+
 </body>
 </html>
 

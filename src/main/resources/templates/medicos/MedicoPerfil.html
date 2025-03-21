@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil Medico</title>
-    <link rel="stylesheet" href="css/indexStyle.css">
-    <link rel="stylesheet" href="css/perfilMedicoStyle.css">
+    <!--<link rel="stylesheet" href="css/indexStyle.css">-->
+    <link rel="stylesheet" th:href="@{/css/perfilMedicoStyle.css}">
 </head>
 <body>
+<div th:replace="~{layouts/header}"></div>
     <div class="contenedorPerfil">
         <img src="img/PPSnape.jpg" alt="Foto de Perfil" class="imagenPerfil">
         <form class="contenidoFormulario">
@@ -38,6 +39,7 @@
             <button type="submit" class="botonEnviar">Guardar Cambios</button>
         </form>
     </div>
-       
+<div th:replace="~{layouts/footer}"></div>
+
 </body>
 </html>

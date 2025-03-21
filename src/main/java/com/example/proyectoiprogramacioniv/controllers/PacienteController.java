@@ -36,6 +36,7 @@ public class PacienteController {
         if (pacienteModel.isPresent()) {
             if (pacienteService.validarContrasenna(identificacion, contrasenna)) {
                 model.addAttribute("paciente", pacienteModel.get());
+                model.addAttribute("role", "paciente"); // Establecemos el rol
                 return "pacientes/PacienteBuscarCita"; // Redirige a la página de buscar cita
             } else {
                 model.addAttribute("error", "Contraseña incorrecta");

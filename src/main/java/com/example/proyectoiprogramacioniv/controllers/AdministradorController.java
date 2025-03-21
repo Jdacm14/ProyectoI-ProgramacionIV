@@ -38,6 +38,7 @@ public class AdministradorController {
             // Verificar si la contraseña es correcta
             if (administradorService.validarContrasenna(identificacion, contrasenna)) {
                 model.addAttribute("administrador", administradorModel.get());
+                model.addAttribute("role", "administrador"); // Establecemos el rol
                 return "administrador/AdminListadoMedicos";  // Redirige a la vista del administrador
             } else {
                 model.addAttribute("error", "Contraseña incorrecta");
