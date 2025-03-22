@@ -14,7 +14,7 @@
         <h2 class="titulo">Registro</h2>
         <div th:if="${error}" class="mensajeError" th:text="${error}"></div>
 
-        <form class="contenidoFormulario" th:action="@{/pacientes/registro}" method="post">
+        <form class="contenidoFormulario" th:action="@{/medicos/registro}" method="post">
             <div class="grupoFormulario">
                 <label for="idUsuario" class="etiquetaFormulario">ID de Usuario</label>
                 <input type="text" class="entradaFormulario" id="idUsuario" name="identificacion" placeholder="Ingrese su ID" required>
@@ -34,7 +34,7 @@
         </form>
 
         <p class="enlace-formulario">¿Ya tienes cuenta?
-            <a th:href="@{/pacientes/login}" class="enlace">Inicia sesión aquí</a>
+            <a th:href="@{/medicos/login}" class="enlace">Inicia sesión aquí</a>
         </p>
     </div>
 </main>

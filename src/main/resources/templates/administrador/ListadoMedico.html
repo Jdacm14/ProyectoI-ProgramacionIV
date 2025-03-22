@@ -38,9 +38,10 @@
                                   th:text="${medico.activo} ? 'Aprobado' : 'Pendiente'"></span>
                 </td>
                 <td>
-                    <form th:action="@{/administrador/aprobarMedico}" method="post">
+                    <form th:action="@{/administrador/cambiarEstadoMedico}" method="post">
                         <input type="hidden" name="idMedico" th:value="${medico.identificacion}">
-                        <button type="submit" class="botonAprobar" th:disabled="${medico.activo}">Aprobar</button>
+                        <button type="submit" class="botonAprobar"
+                                th:text="${medico.activo} ? 'Desaprobar' : 'Aprobar'"></button>
                     </form>
                 </td>
             </tr>

@@ -63,4 +63,10 @@ public class AdministradorController {
         return "administrador/ListadoMedico"; // Debe coincidir con el nombre del HTML en templates
     }
 
+    @PostMapping("/administrador/cambiarEstadoMedico")
+    public String cambiarEstadoMedico(@RequestParam("idMedico") Long id) {
+        medicoService.cambiarEstadoMedico(id);
+        return "redirect:/administrador/ListadoMedico"; // Recarga la página
+    }
+
 }

@@ -33,6 +33,15 @@ public class MedicoService {
         return medico.map(m -> m.getContrasenna().equals(contrasenna)).orElse(false);
     }
 
+    public void cambiarEstadoMedico(Long id) {
+        Optional<MedicoModel> medicoOptional = medicoRepository.findById(id);
+        if (medicoOptional.isPresent()) {
+            MedicoModel medico = medicoOptional.get();
+            medico.setActivo(!medico.isActivo()); // Cambia el estado actual
+            medicoRepository.save(medico); // Guarda el cambio en la BD
+        }
+    }
+
 
     public void registrarMedico(MedicoModel medico) {
         medicoRepository.save(medico);
