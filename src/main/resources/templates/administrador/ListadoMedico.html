@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Médicos</title>
+    <link rel="stylesheet" th:href="@{/css/listadoMedicoStyle.css}">
+</head>
+<body>
+
+<div th:replace="~{layouts/header}"></div> <!-- Header arriba -->
+
+<div class="contenedor">
+    <h2 class="titulo">Listado de Médicos</h2>
+
+    <div class="contenedorTabla">
+        <table class="tablaMedicos">
+            <thead>
+            <tr>
+                <th>Identificación</th>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Mostrar mensaje si no hay médicos registrados -->
+            <tr th:if="${#lists.isEmpty(medicos)}">
+                <td colspan="4" style="text-align: center;">No hay médicos registrados.</td>
+            </tr>
+
+            <!-- Iterar sobre la lista de médicos -->
+            <tr th:each="medico : ${medicos}">
+                <td th:text="${medico.identificacion}"></td>
+                <td th:text="${medico.nombre}"></td>
+                <td>
+                            <span th:classappend="${medico.activo} ? 'estado aprobado' : 'estado pendiente'"
+                                  th:text="${medico.activo} ? 'Aprobado' : 'Pendiente'"></span>
+                </td>
+                <td>
+                    <form th:action="@{/administrador/cambiarEstadoMedico}" method="post">
+                        <input type="hidden" name="idMedico" th:value="${medico.identificacion}">
+                        <button type="submit" class="botonAprobar"
+                                th:text="${medico.activo} ? 'Desaprobar' : 'Aprobar'"></button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:replace="~{layouts/footer}"></div>
+
+</body>
+</html>

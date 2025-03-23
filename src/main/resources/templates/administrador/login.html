@@ -4,22 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
-    <link rel="stylesheet" href="http://localhost:8080/css/loginRegistroStyle.css">
+    <link rel="stylesheet" th:href="@{/css/loginRegistroStyle.css}">
 </head>
 <body>
 <div th:replace="~{layouts/header}"></div>
-<div class="contenedorPrincipal">
+
+<main class="contenedorPrincipal">
     <div class="formulario">
         <h2 class="titulo">Iniciar Sesión</h2>
 
-        <!-- Si hay un mensaje de error, lo mostramos aquí -->
         <div th:if="${error}" class="mensajeError" th:text="${error}"></div>
 
-        <!-- Formulario para el login -->
         <form class="contenidoFormulario" method="post">
             <div class="grupoFormulario">
                 <label for="idUsuario" class="etiquetaFormulario">ID de Usuario</label>
-                <input type="text" class="entradaFormulario" id="idUsuario" name="identificacion" required>
+                <input type="text" class="entradaFormulario" id="idUsuario" name="identificacion" pattern="[0-9]{9}" title="Debe ingresar exactamente 9 dígitos" required>
             </div>
             <div class="grupoFormulario">
                 <label for="contrasenaUsuario" class="etiquetaFormulario">Contraseña</label>
@@ -27,10 +26,9 @@
             </div>
             <button type="submit" class="botonEnviar">Ingresar</button>
         </form>
-
     </div>
-</div>
+</main>
 
 <div th:replace="~{layouts/footer}"></div>
 </body>
-</html>
+

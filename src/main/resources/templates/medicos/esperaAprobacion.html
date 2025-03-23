@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esperando Aprobación</title>
+  <link rel="stylesheet" th:href="@{/css/esperaAprobacion.css}">
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+
+<div class="contenedor">
+  <h2>Tu cuenta está en proceso de aprobación</h2>
+  <p>Por favor, espera a que un administrador apruebe tu registro.</p>
+  <div class="cargando"></div>
+</div>
+<div th:replace="~{layouts/footer}"></div>
+</body>
+</html>

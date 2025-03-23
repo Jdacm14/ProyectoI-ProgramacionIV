@@ -7,8 +7,9 @@
     <link rel="stylesheet" href="css/historicoCitasStyle.css">
 </head>
 <body>
-    
-    <main class="contenedorCitas">
+<div th:replace="~{layouts/header}"></div>
+
+<main class="contenedorCitas">
         <h1 class="titulo">Histórico de Citas</h1>
         <section class="filtros">
             <label for="filtroEstado" class="etiquetaFormulario">Filtrar por estado:</label>
@@ -53,7 +54,8 @@
             </table>
         </section>
     </main>
-    
-  
+
+<div th:replace="~{layouts/footer}"></div>
+
 </body>
 </html>
