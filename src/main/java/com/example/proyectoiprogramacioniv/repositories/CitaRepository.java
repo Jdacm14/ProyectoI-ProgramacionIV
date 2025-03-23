@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface CitaRepository extends JpaRepository<CitaModel, Long> {
+
     Optional<CitaModel> findByIdentificacion(String identificacion);
+
 }
