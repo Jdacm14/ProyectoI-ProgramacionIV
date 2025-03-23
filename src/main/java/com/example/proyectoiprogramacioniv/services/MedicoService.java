@@ -37,7 +37,7 @@ public class MedicoService {
         Optional<MedicoModel> medicoOptional = medicoRepository.findById(id);
         if (medicoOptional.isPresent()) {
             MedicoModel medico = medicoOptional.get();
-            medico.setActivo(!medico.isActivo()); // Cambia el estado actual
+            medico.setActivo(!medico.getActivo()); // Cambia el estado actual
             medicoRepository.save(medico); // Guarda el cambio en la BD
         }
     }
