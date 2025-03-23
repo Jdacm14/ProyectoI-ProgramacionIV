@@ -20,7 +20,7 @@
         <form class="contenidoFormulario" th:action="@{/pacientes/registro}" method="post">
             <div class="grupoFormulario">
                 <label for="idUsuario" class="etiquetaFormulario">ID de Usuario</label>
-                <input type="text" class="entradaFormulario" id="idUsuario" name="identificacion" placeholder="Ingrese su ID" required>
+                <input type="text" class="entradaFormulario" id="idUsuario" name="identificacion" pattern="[0-9]{9}" title="Debe ingresar exactamente 9 dígitos" required>
             </div>
             <div class="grupoFormulario">
                 <label for="nombreUsuario" class="etiquetaFormulario">Nombre</label>

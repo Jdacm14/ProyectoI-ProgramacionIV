@@ -5,6 +5,8 @@ import com.example.proyectoiprogramacioniv.models.MedicoModel;
 import com.example.proyectoiprogramacioniv.repositories.AdministradorRepository;
 import com.example.proyectoiprogramacioniv.services.AdministradorService;
 import com.example.proyectoiprogramacioniv.services.MedicoService;
+import jakarta.servlet.http.HttpSession;
+import org.apache.coyote.http11.Http11InputBuffer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +38,7 @@ public class AdministradorController {
     @PostMapping("administrador/login")
     public String loginAdmin(@RequestParam("identificacion") String identificacion,
                              @RequestParam("contrasenna") String contrasenna,
-                             Model model) {
+                             Model model, HttpSession session) {
         Optional<AdministradorModel> administradorModel = administradorRepository.findByIdentificacion(identificacion);
 
         // Si el administrador existe
@@ -44,7 +46,7 @@ public class AdministradorController {
             // Verificar si la contraseña es correcta
             if (administradorService.validarContrasenna(identificacion, contrasenna)) {
                 model.addAttribute("administrador", administradorModel.get());
-                model.addAttribute("role", "administrador"); // Establecemos el rol
+                session.setAttribute("tipo", "administrador"); // Establecemos el rol
                 return "redirect:/administrador/ListadoMedico";  // Redirige a la vista del administrador
             } else {
                 model.addAttribute("error", "Contraseña incorrecta");

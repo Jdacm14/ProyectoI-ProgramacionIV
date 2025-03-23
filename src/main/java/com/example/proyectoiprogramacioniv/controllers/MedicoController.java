@@ -3,6 +3,7 @@ package com.example.proyectoiprogramacioniv.controllers;
 import com.example.proyectoiprogramacioniv.models.MedicoModel;
 import com.example.proyectoiprogramacioniv.repositories.MedicoRepository;
 import com.example.proyectoiprogramacioniv.services.MedicoService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,32 +32,35 @@ public class MedicoController {
     @PostMapping("/medicos/login")
     public String loginMedico(@RequestParam("identificacion") String identificacion,
                               @RequestParam("contrasenna") String contrasenna,
-                              Model model) {
+                              Model model, HttpSession session) {
         Optional<MedicoModel> medicoOptional = medicoService.buscarPorIdentificacion(identificacion);
 
         if (medicoOptional.isPresent()) {
             MedicoModel medico = medicoOptional.get();
 
-            // Si el médico aún no está aprobado, mostrar pantalla de espera
-            if (!medico.isActivo()) {
-                model.addAttribute("medico", medico);
-                return "medicos/esperaAprobacion"; // Redirige a la vista de espera
+            // Primero valida la contraseña
+            if (!medicoService.validarContrasenna(identificacion, contrasenna)) {
+                model.addAttribute("error", "Contraseña incorrecta");
+                return "medicos/login"; // Mantiene la vista de login con el error
             }
 
-            // Si está aprobado, permitir el acceso
-            if (medicoService.validarContrasenna(identificacion, contrasenna)) {
+            // Si la contraseña es correcta, ahora sí verificar si el médico está activo
+            if (!medico.isActivo()) {
                 model.addAttribute("medico", medico);
-                model.addAttribute("role", "medico");
-                return "medicos/MedicoPerfil"; // Redirige al dashboard de médicos
-            } else {
-                model.addAttribute("error", "Contraseña incorrecta");
-                return "medicos/login";
+                session.setAttribute("tipo", "medico");
+                return "redirect:/medicos/esperaAprobacion"; // Redirige a la vista de espera
             }
+
+            // Si el médico está activo, permite el acceso
+            model.addAttribute("medico", medico);
+            session.setAttribute("tipo", "medico");
+            return "redirect:/medicos/MedicoPerfil"; // Ahora sí redirige al perfil
         } else {
             model.addAttribute("error", "Identificación incorrecta");
-            return "medicos/login";
+            return "medicos/login"; // Mantiene la vista de login con el error
         }
     }
+
 
     // Registro de médico
     @GetMapping("medicos/registro")
@@ -95,4 +99,15 @@ public class MedicoController {
         return "redirect:/medicos/login";  // Redirige correctamente al login
         // Redirige al login después del registro exitoso
     }
+
+    @GetMapping("medicos/esperaAprobacion")
+    public String esperaAprobacion() {
+        return "medicos/esperaAprobacion";
+    }
+
+    @GetMapping("medicos/MedicoPerfil")
+    public String MedicoPerfil() {
+        return "medicos/MedicoPerfil";
+    }
+
 }

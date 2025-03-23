@@ -1,3 +1,9 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" th:href="@{/css/headerFooterStyle.css}">
+</head>
 <header class="header">
     <div class="header-left">
         <img src="http://localhost:8080/img/logo.png" alt="Logo del hospital" class="logo">
@@ -13,24 +19,24 @@
         <a href="../about" class="nav-link">About</a>
 
         <!-- Mostrar opciones dependiendo del rol del usuario -->
-        <div th:if="${role == 'paciente'}">
+        <div th:if="${session.tipo == 'paciente'}">
             <a href="../pacientes/PacienteHistoricoCitas" class="nav-link">Historial</a>
             <a href="../pacientes/PacienteBuscarCita" class="nav-link">Buscar</a>
             <a href="../index" class="nav-link">Logout</a>
         </div>
 
-        <div th:if="${role == 'medico'}">
+        <div th:if="${session.tipo == 'medico'}">
             <a href="../medicos/MedicoGestionCitas" class="nav-link">Citas</a>
             <a href="../medicos/MedicoPerfil" class="nav-link">Perfil</a>
             <a href="../index" class="nav-link">Logout</a>
         </div>
 
-        <div th:if="${role == 'administrador'}">
+        <div th:if="${session.tipo == 'administrador'}">
             <a th:href="@{/}" class="nav-link">Logout</a>
         </div>
 
         <!-- Para usuarios no logueados -->
-        <div th:if="${role == null}">
+        <div th:if="${session.tipo == null}">
             <a th:href="@{/buscar-cita}" class="nav-link">Buscar</a>
             <a th:href="@{/prelogin}" class="nav-link">Login</a>
         </div>
