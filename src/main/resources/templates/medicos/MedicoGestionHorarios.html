@@ -19,7 +19,8 @@
 <main class="contenedorCitas">
     <section class="tablaCitas">
         <!-- Agregar un nuevo horario-->
-        <form action="/enviar" method="post">
+        <p> <span style="color: #2d6a4f; font-weight: bold">Crear un nuevo horario </span> </p>
+        <form action="/medicos/MedicoGestionHorario" method="post">
             <table>
                 <thead>
                 <tr>
@@ -32,15 +33,17 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td><input type="text" id="especialidad" name="especialidad" required></td>
+                    <td><input type="text" id="especialidad" name="especialidad" th:value="${medico.getEspecialidad()}" required readonly style="color: #999999"></td>
                     <td><input type="date" id="fecha" name="fecha" required></td>
                     <td><input type="time" id="hora" name="hora" required></td>
-                    <td><input  type="number" id="precio"  name="precio" required></input></td>
+                    <td><input  type="number" id="precio"  name="precio" required></td>
                     <td><input type="submit" value="Enviar"> </td>
                 </tr>
                 </tbody>
             </table>
         </form>
+
+
     </section>
 
     <section class="filtros">

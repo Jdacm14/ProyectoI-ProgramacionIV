@@ -1,7 +1,10 @@
 package com.example.proyectoiprogramacioniv.controllers;
 
+import com.example.proyectoiprogramacioniv.models.HorarioModel;
 import com.example.proyectoiprogramacioniv.models.MedicoModel;
+import com.example.proyectoiprogramacioniv.repositories.HorarioRepository;
 import com.example.proyectoiprogramacioniv.repositories.MedicoRepository;
+import com.example.proyectoiprogramacioniv.services.HorarioService;
 import com.example.proyectoiprogramacioniv.services.MedicoService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.UUID;
 
 import java.util.Optional;
 
@@ -21,6 +25,12 @@ public class MedicoController {
 
     @Autowired
     private MedicoRepository medicoRepository;
+
+    @Autowired
+    private HorarioService horarioService;
+
+    @Autowired
+    private HorarioRepository horarioRepository;
 
     // Muestra el login para los médicos
     @GetMapping("medicos/login")
@@ -156,9 +166,6 @@ public class MedicoController {
     }
 
 
-
-
-
     @GetMapping("/medicos/MedicoGestionHorarios")
     public String MedicoGestionHorarios(Model model, HttpSession session) {
 
@@ -166,9 +173,35 @@ public class MedicoController {
 
         if (medico == null) { return "redirect:/medicos/login";}
 
+        model.addAttribute("medico", medico);
         model.addAttribute("nombre", medico.getNombre());
         return "medicos/MedicoGestionHorarios";
     }
 
+    @PostMapping("/medicos/MedicoGestionHorario")
+    public String MedicosHorariosGuardar(@RequestParam("fecha") String fecha,
+                                         @RequestParam("hora") String hora,
+                                         @RequestParam("precio") float precio,
+                                         Model model, HttpSession session){
+
+        MedicoModel medico = (MedicoModel) session.getAttribute("medico");
+
+        if (medico == null) {
+            System.out.println("No se encontro un medico en la sesion");
+            return "redirect:/medicos/login";
+        }
+
+        HorarioModel horario = new HorarioModel();
+        horario.setId(UUID.randomUUID().toString());
+        horario.setFecha(fecha);
+        horario.setHora(hora);
+        horario.setDisponible(true);
+        horario.setPrecio(precio);
+
+        horarioService.registrarHorario(horario);
+
+
+        return "redirect:/medicos/MedicoGestionHorarios";
+    }
 
 }
