@@ -45,16 +45,22 @@ public class MedicoController {
             }
 
             // Si la contraseña es correcta, ahora sí verificar si el médico está activo
-            if (!medico.isActivo()) {
+            if (!medico.getActivo()) {
                 model.addAttribute("medico", medico);
                 session.setAttribute("tipo", "medico");
                 return "redirect:/medicos/esperaAprobacion"; // Redirige a la vista de espera
             }
 
+            if(medico.getEspecialidad() == null || medico.getUbicacion() == null) {
+                model.addAttribute("medico", medico);
+                session.setAttribute("tipo", "medico");
+                return "redirect:/medicos/MedicoPerfil";
+            }
+
             // Si el médico está activo, permite el acceso
             model.addAttribute("medico", medico);
             session.setAttribute("tipo", "medico");
-            return "redirect:/medicos/MedicoPerfil"; // Ahora sí redirige al perfil
+            return "redirect:/medicos/MedicoGestionCitas"; // Ahora sí redirige al perfil
         } else {
             model.addAttribute("error", "Identificación incorrecta");
             return "medicos/login"; // Mantiene la vista de login con el error
@@ -109,5 +115,11 @@ public class MedicoController {
     public String MedicoPerfil() {
         return "medicos/MedicoPerfil";
     }
+
+    @GetMapping("medicos/MedicoGestionCitas")
+    public String MedicoGestionCitas() {
+        return "medicos/MedicoGestionCitas";
+    }
+
 
 }
