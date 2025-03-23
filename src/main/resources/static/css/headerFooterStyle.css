@@ -1,5 +1,6 @@
 /* Header */
 .header {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -91,11 +92,9 @@
     color: #f1faee;
 }
 
-
-
 /* Footer */
 .footer {
-    width: 100vw;
+    width: 100%;
     background-color: #2d6a4f;
     padding: 15px 30px;
     color: white;
@@ -142,5 +141,14 @@
     }
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
 
-
+*, *::before, *::after {
+    box-sizing: border-box;
+}
