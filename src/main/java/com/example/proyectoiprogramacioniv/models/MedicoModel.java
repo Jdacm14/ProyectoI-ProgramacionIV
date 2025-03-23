@@ -28,7 +28,7 @@ public class MedicoModel {
     public String getIdentificacion() {return identificacion;}
     public String getNombre() {return nombre;}
     public String getContrasenna() {return contrasenna;}
-    public boolean isActivo() {return activo;}
+    public boolean getActivo() {return activo;}
     public String getEspecialidad() {return especialidad;}
     public String getUbicacion() {return ubicacion;}
 

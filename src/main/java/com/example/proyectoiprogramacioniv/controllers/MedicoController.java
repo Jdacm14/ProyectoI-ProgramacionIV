@@ -45,7 +45,7 @@ public class MedicoController {
             }
 
             // Si la contraseña es correcta, ahora sí verificar si el médico está activo
-            if (!medico.isActivo()) {
+            if (!medico.getActivo()) {
                 model.addAttribute("medico", medico);
                 session.setAttribute("tipo", "medico");
                 return "redirect:/medicos/esperaAprobacion"; // Redirige a la vista de espera
