@@ -54,6 +54,13 @@
     transform: scale(1.2); /*Efecto de Zoom al pasar el cursor que me recomendo chatgpt*/
 }
 
+.maintitle {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
 
 /* Responsividad */
 @media (max-width: 768px) {

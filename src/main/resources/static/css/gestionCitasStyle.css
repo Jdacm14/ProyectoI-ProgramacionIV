@@ -29,6 +29,18 @@ body {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
+.contenedorHorario {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 /* Filtros */
 .filtros {
     display: flex;
@@ -126,7 +138,21 @@ textarea.entradaFormulario {
     cursor: not-allowed;
 }
 
+.botonHorario {
+    background-color: #40916c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    font-weight: bold;
+}
 
+.botonHorario:hover {
+    background-color: #2d6a4f;
+}
 
 @media (max-width: 600px) {
     .tablaCitas table {

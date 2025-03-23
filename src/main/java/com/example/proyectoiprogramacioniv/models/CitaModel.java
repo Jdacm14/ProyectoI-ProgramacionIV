@@ -10,7 +10,6 @@ public class CitaModel {
     private String pacienteID;
     private String horarioID;
     private String estado; //Pendiente, Completada, Cancelada
-    private float precio;
 
     public CitaModel() {}
 
@@ -20,7 +19,6 @@ public class CitaModel {
         this.pacienteID = pacienteID;
         this.horarioID = horarioID;
         this.estado = "Pendiente";
-        this.precio = 0;
     }
 
     //      Getters
@@ -34,7 +32,6 @@ public class CitaModel {
 
     public String getEstado() {return estado;}
 
-    public float getPrecio() {return precio;}
 
     //      setters
     public void setIdentificacion(String identificacion) {this.identificacion = identificacion;}
@@ -47,5 +44,4 @@ public class CitaModel {
 
     public void setEstado(String estado) {this.estado = estado;}
 
-    public void setPrecio(float precio) {this.precio = precio;}
 }

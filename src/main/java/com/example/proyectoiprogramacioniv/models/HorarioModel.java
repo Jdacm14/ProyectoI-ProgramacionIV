@@ -12,6 +12,7 @@ public class HorarioModel {
     private String fecha;
     private String hora;
     private Boolean disponible; //= false;
+    private float precio;
 
     public HorarioModel() {}
 
@@ -21,6 +22,7 @@ public class HorarioModel {
         this.fecha = "";
         this.hora = "";
         this.disponible = false;
+        this.precio = 0;
     }
 
 
@@ -30,6 +32,7 @@ public class HorarioModel {
     public String getHora() {return hora;}
     public String getFecha() {return fecha;}
     public Boolean getDisponible() {return disponible;}
+    public float getPrecio() {return precio;}
 
     //  setters
     public void setId(String id) {this.identificacion = id;}
@@ -37,5 +40,6 @@ public class HorarioModel {
     public void setHora(String hora) {this.hora = hora;}
     public void setFecha(String fecha) {this.fecha = fecha;}
     public void setDisponible(Boolean disponible) {this.disponible = disponible;}
+    public void setPrecio(float costo) {this.precio = costo;}
 
 }
