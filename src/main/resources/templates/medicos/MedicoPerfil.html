@@ -4,42 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil Medico</title>
-    <!--<link rel="stylesheet" href="css/indexStyle.css">-->
     <link rel="stylesheet" th:href="@{/css/perfilMedicoStyle.css}">
 </head>
 <body>
 <div th:replace="~{layouts/header}"></div>
-    <div class="contenedorPerfil">
-        <img src="img/PPSnape.jpg" alt="Foto de Perfil" class="imagenPerfil">
-        <form class="contenidoFormulario">
-            <div class="grupoFormulario">
-                <label for="nombre" class="etiquetaFormulario">Nombre</label>
-                <input type="text" class="entradaFormulario" id="nombre" required>
-            </div>
-            <div class="grupoFormulario">
-                <label for="especialidad" class="etiquetaFormulario">Especialidad</label>
-                <input type="text" class="entradaFormulario" id="especialidad" required>
-            </div>
-            <div class="grupoFormulario">
-                <label for="presentacion" class="etiquetaFormulario">Presentación</label>
-                <textarea class="entradaFormulario" id="presentacion" rows="3" required></textarea>
-            </div>
-            <div class="grupoFormulario">
-                <label for="costo" class="etiquetaFormulario">Costo de Consulta</label>
-                <input type="number" class="entradaFormulario" id="costo" required>
-            </div>
-            <div class="grupoFormulario">
-                <label for="ubicacion" class="etiquetaFormulario">Ubicación</label>
-                <input type="text" class="entradaFormulario" id="ubicacion" required>
-            </div>
-            <div class="grupoFormulario">
-                <label for="fotoPerfil" class="etiquetaFormulario">Foto de Perfil</label>
-                <input type="file" class="entradaFormulario" id="fotoPerfil">
-            </div>
-            <button type="submit" class="botonEnviar">Guardar Cambios</button>
-        </form>
-    </div>
+<div class="contenedorPerfil">
+    <img th:src="@{img/PPSnape.jpg}" alt="Foto de Perfil" class="imagenPerfil">
+    <form class="contenidoFormulario" th:action="@{/medicos/MedicoPerfil}" method="post" enctype="multipart/form-data">
+        <div class="grupoFormulario">
+            <label for="nombre" class="etiquetaFormulario">Nombre</label>
+            <input type="text" class="entradaFormulario" id="nombre"
+                   th:value="${medico.nombre != null ? medico.nombre : ''}" required>
+        </div>
+        <div class="grupoFormulario">
+            <label for="especialidad" class="etiquetaFormulario">Especialidad</label>
+            <input type="text" class="entradaFormulario" id="especialidad"
+                   th:value="${medico.especialidad != null ? medico.especialidad : ''}" required>
+        </div>
+        <div class="grupoFormulario">
+            <label for="presentacion" class="etiquetaFormulario">Presentación</label>
+            <textarea class="entradaFormulario" id="presentacion" rows="3"
+                      th:text="${medico.presentacion != null ? medico.presentacion : ''}" required></textarea>
+        </div>
+        <div class="grupoFormulario">
+            <label for="costo" class="etiquetaFormulario">Costo de Consulta</label>
+            <input type="number" class="entradaFormulario" id="costo"
+                   th:value="${medico.costoConsulta != null ? medico.costoConsulta : ''}" required>
+        </div>
+        <div class="grupoFormulario">
+            <label for="ubicacion" class="etiquetaFormulario">Ubicación</label>
+            <input type="text" class="entradaFormulario" id="ubicacion"
+                   th:value="${medico.ubicacion != null ? medico.ubicacion : ''}" required>
+        </div>
+        <div class="grupoFormulario">
+            <label for="horaInicio" class="etiquetaFormulario">Hora de inicio</label>
+            <input type="time" class="entradaFormulario" id="horaInicio"
+                   th:value="${medico.horaInicio != null ? medico.horaInicio : ''}" required>
+        </div>
+        <div class="grupoFormulario">
+            <label for="horaFin" class="etiquetaFormulario">Hora de fin</label>
+            <input type="time" class="entradaFormulario" id="horaFin"
+                   th:value="${medico.horaFin != null ? medico.horaFin : ''}" required>
+        </div>
+        <div class="grupoFormulario">
+            <label for="frecuencia" class="etiquetaFormulario">Frecuencia</label>
+            <input type="time" class="entradaFormulario" id="frecuencia"
+                   th:value="${medico.frecuencia != null ? medico.frecuencia : ''}" required>
+        </div>
+        <div class="grupoFormulario">
+            <label for="fotoPerfil" class="etiquetaFormulario">Foto de Perfil</label>
+            <input type="file" class="entradaFormulario" id="fotoPerfil" name="fotoPerfil">
+        </div>
+        <button type="submit" class="botonEnviar">Guardar Cambios</button>
+    </form>
+</div>
 <div th:replace="~{layouts/footer}"></div>
-
 </body>
 </html>
