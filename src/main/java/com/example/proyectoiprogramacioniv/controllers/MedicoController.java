@@ -28,25 +28,33 @@ public class MedicoController {
     }
 
     // Login para médicos
-    @PostMapping("medicos/login")
+    @PostMapping("/medicos/login")
     public String loginMedico(@RequestParam("identificacion") String identificacion,
                               @RequestParam("contrasenna") String contrasenna,
                               Model model) {
-        Optional<MedicoModel> medicoModel = medicoRepository.findByIdentificacion(identificacion);
+        Optional<MedicoModel> medicoOptional = medicoService.buscarPorIdentificacion(identificacion);
 
-        // Si el médico existe
-        if (medicoModel.isPresent()) {
+        if (medicoOptional.isPresent()) {
+            MedicoModel medico = medicoOptional.get();
+
+            // Si el médico aún no está aprobado, mostrar pantalla de espera
+            if (!medico.isActivo()) {
+                model.addAttribute("medico", medico);
+                return "medicos/esperaAprobacion"; // Redirige a la vista de espera
+            }
+
+            // Si está aprobado, permitir el acceso
             if (medicoService.validarContrasenna(identificacion, contrasenna)) {
-                model.addAttribute("medico", medicoModel.get());
-                model.addAttribute("role", "medico"); // Establecemos el rol
-                return "medicos/MedicoPerfil"; // Redirige al perfil del médico
+                model.addAttribute("medico", medico);
+                model.addAttribute("role", "medico");
+                return "medicos/MedicoPerfil"; // Redirige al dashboard de médicos
             } else {
                 model.addAttribute("error", "Contraseña incorrecta");
-                return "medicos/login"; // Redirige al login con el mensaje de error
+                return "medicos/login";
             }
         } else {
             model.addAttribute("error", "Identificación incorrecta");
-            return "medicos/login"; // Redirige al login con el mensaje de error
+            return "medicos/login";
         }
     }
 
