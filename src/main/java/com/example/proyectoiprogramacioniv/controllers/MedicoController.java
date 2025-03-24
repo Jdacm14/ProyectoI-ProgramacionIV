@@ -58,8 +58,8 @@ public class MedicoController {
                 return "medicos/login"; // Mantiene la vista de login con el error
             }
 
-            // Si la contraseña es correcta, ahora sí verificar si el médico está activo
-            if (!medico.isActivo()) {
+            // Si la contraseña es correcta, ahora verificar si el médico está activo
+            if (!medico.getActivo()) {
                 model.addAttribute("medico", medico);
                 session.setAttribute("tipo", "medico");
                 return "redirect:/medicos/esperaAprobacion"; // Redirige a la vista de espera
@@ -72,18 +72,31 @@ public class MedicoController {
                 return "redirect:/medicos/MedicoPerfil";
             }
 
+            // Si no ha especificado la especialidad o su ubicación lo redirige al medicoPerfil
+            if(medico.getEspecialidad() == null || medico.getUbicacion() == null) {
+                model.addAttribute("medico", medico);
+                session.setAttribute("tipo", "medico");
+                session.setAttribute("medico", medico); // Agrega esta línea
+                return "redirect:/medicos/MedicoPerfil";
+            }
+
+
             // Si el médico está activo, permite el acceso
             model.addAttribute("medico", medico);
             session.setAttribute("tipo", "medico");
+
             session.setAttribute("medico", medico); //Para pasar el medico al medicoPerfil
             return "redirect:/medicos/MedicoGestionCitas"; // Ahora sí redirige al perfil
+          
         } else {
             model.addAttribute("error", "Identificación incorrecta");
             return "medicos/login"; // Mantiene la vista de login con el error
         }
     }
 
+
 //------------------------  Registro  -----------------------------------------------
+
     // Registro de médico
     @GetMapping("medicos/registro")
     public String registro() {
@@ -169,9 +182,7 @@ public class MedicoController {
 //------------------------------- Gestion Citas -----------------------------------------
     @GetMapping("/medicos/MedicoGestionCitas")
     public String MedicoGestionCitas(Model model, HttpSession session) {
-
         MedicoModel medico = (MedicoModel) session.getAttribute("medico");
-
         // Si no hay un médico en la sesión , redirige a login
         if (medico == null) { return "redirect:/medicos/login"; }
 
@@ -179,7 +190,9 @@ public class MedicoController {
         return "medicos/MedicoGestionCitas";
     }
 
+
 //--------------------------------------Gestion Horarios -------------------------------------
+
     @GetMapping("/medicos/MedicoGestionHorarios")
     public String MedicoGestionHorarios(Model model, HttpSession session) {
 
@@ -195,6 +208,7 @@ public class MedicoController {
 
         return "medicos/MedicoGestionHorarios";
     }
+
 
     @PostMapping("/medicos/MedicoGestionHorario")
     public String MedicosHorariosGuardar(@RequestParam("fecha") String fecha,
