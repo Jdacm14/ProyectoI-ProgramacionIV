@@ -19,7 +19,8 @@
 <main class="contenedorCitas">
     <section class="tablaCitas">
         <!-- Agregar un nuevo horario-->
-        <form action="/enviar" method="post">
+        <p> <span style="color: #2d6a4f; font-weight: bold">Crear un nuevo horario </span> </p>
+        <form action="/medicos/MedicoGestionHorario" method="post">
             <table>
                 <thead>
                 <tr>
@@ -32,15 +33,17 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td><input type="text" id="especialidad" name="especialidad" required></td>
+                    <td><input type="text" id="especialidad" name="especialidad" th:value="${medico.getEspecialidad()}" required readonly style="color: #999999"></td>
                     <td><input type="date" id="fecha" name="fecha" required></td>
                     <td><input type="time" id="hora" name="hora" required></td>
-                    <td><input  type="number" id="precio"  name="precio" required></input></td>
+                    <td><input  type="number" id="precio"  name="precio" required></td>
                     <td><input type="submit" value="Enviar"> </td>
                 </tr>
                 </tbody>
             </table>
         </form>
+
+
     </section>
 
     <section class="filtros">
@@ -57,33 +60,30 @@
         <table>
                 <thead>
                 <tr>
-                    <th>Especialidad</th>
                     <th>Fecha</th>
                     <th>Hora</th>
                     <th>Precio</th>
+                    <th></th>
 
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Odontologia</td>
-                    <td>2025-03-12</td>
-                    <td>09:00 AM</td>
-                    <td>60 000</td>
-                </tr>
-                <tr>
-                    <td>Dermatologia</td>
-                    <td>2025-03-11</td>
-                    <td>11:30 AM</td>
-                    <td>120 000</td>
+                <tr th:each="horario : ${horarios}">
+                    <td th:text="${horario.getFecha()}" ></td>
+                    <td th:text="${horario.getHora()}"></td>
+                    <td th:text="${horario.getPrecio()}" ></td>
+                    <td>
+                        <form th:action="@{/medicos/MedicoGestionHorario/Eliminar}" method="post">
+                        <input type="hidden" name="idHorario" th:value="${horario.getId()}">
+                        <button type="submit"><!--class="Clase CSS"--> Eliminar</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
         </table>
     </section>
 
 </main>
-
-
 
 <div th:replace="~{layouts/footer}"></div>
 

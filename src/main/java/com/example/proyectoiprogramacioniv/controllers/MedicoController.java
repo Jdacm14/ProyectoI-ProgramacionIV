@@ -1,7 +1,10 @@
 package com.example.proyectoiprogramacioniv.controllers;
 
+import com.example.proyectoiprogramacioniv.models.HorarioModel;
 import com.example.proyectoiprogramacioniv.models.MedicoModel;
+import com.example.proyectoiprogramacioniv.repositories.HorarioRepository;
 import com.example.proyectoiprogramacioniv.repositories.MedicoRepository;
+import com.example.proyectoiprogramacioniv.services.HorarioService;
 import com.example.proyectoiprogramacioniv.services.MedicoService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.UUID;
 
 import java.util.Optional;
 
@@ -21,6 +27,14 @@ public class MedicoController {
 
     @Autowired
     private MedicoRepository medicoRepository;
+
+    @Autowired
+    private HorarioService horarioService;
+
+    @Autowired
+    private HorarioRepository horarioRepository;
+
+    //---------------------------  login ----------------------------------
 
     // Muestra el login para los médicos
     @GetMapping("medicos/login")
@@ -50,6 +64,13 @@ public class MedicoController {
                 session.setAttribute("tipo", "medico");
                 return "redirect:/medicos/esperaAprobacion"; // Redirige a la vista de espera
             }
+            // Si no ha especificado la especialidad o su ubicación lo redirige al medicoPerfil
+            if(medico.getEspecialidad() == "" || medico.getUbicacion() == "" ) {
+                model.addAttribute("medico", medico);
+                session.setAttribute("tipo", "medico");
+                session.setAttribute("medico", medico); // Agrega esta línea
+                return "redirect:/medicos/MedicoPerfil";
+            }
 
             // Si no ha especificado la especialidad o su ubicación lo redirige al medicoPerfil
             if(medico.getEspecialidad() == null || medico.getUbicacion() == null) {
@@ -63,12 +84,18 @@ public class MedicoController {
             // Si el médico está activo, permite el acceso
             model.addAttribute("medico", medico);
             session.setAttribute("tipo", "medico");
-            return "redirect:/medicos/MedicoGestionCitas"; // Redirige al perfil del médico
+
+            session.setAttribute("medico", medico); //Para pasar el medico al medicoPerfil
+            return "redirect:/medicos/MedicoGestionCitas"; // Ahora sí redirige al perfil
+          
         } else {
             model.addAttribute("error", "Identificación incorrecta");
             return "medicos/login"; // Mantiene la vista de login con el error
         }
     }
+
+
+//------------------------  Registro  -----------------------------------------------
 
     // Registro de médico
     @GetMapping("medicos/registro")
@@ -113,6 +140,7 @@ public class MedicoController {
         return "medicos/esperaAprobacion";
     }
 
+    //--------------------------------  Medico Perfil --------------------------
     //Ingreso al perfil
     @GetMapping("medicos/MedicoPerfil")
     public String MedicoPerfil(HttpSession session,
@@ -132,6 +160,7 @@ public class MedicoController {
     public String ActualizarPerfil (@RequestParam("nombre") String nombre,
                                     @RequestParam("especialidad") String especialidad,
                                     @RequestParam("ubicacion") String ubicacion,
+                                    @RequestParam("presentacion") String presentacion,
                                     Model model, HttpSession session){
 
          MedicoModel medico = (MedicoModel) session.getAttribute("medico");
@@ -143,13 +172,14 @@ public class MedicoController {
          medico.setNombre(nombre);
          medico.setEspecialidad(especialidad);
          medico.setUbicacion(ubicacion);
+         medico.setPresentacion(presentacion);
 
          medicoRepository.save(medico); //Guarda los cambios en la base de datos
          session.setAttribute("medico", medico);
 
         return "redirect:/medicos/MedicoGestionCitas";
     }
-
+//------------------------------- Gestion Citas -----------------------------------------
     @GetMapping("/medicos/MedicoGestionCitas")
     public String MedicoGestionCitas(Model model, HttpSession session) {
         MedicoModel medico = (MedicoModel) session.getAttribute("medico");
@@ -161,6 +191,8 @@ public class MedicoController {
     }
 
 
+//--------------------------------------Gestion Horarios -------------------------------------
+
     @GetMapping("/medicos/MedicoGestionHorarios")
     public String MedicoGestionHorarios(Model model, HttpSession session) {
 
@@ -168,7 +200,50 @@ public class MedicoController {
 
         if (medico == null) { return "redirect:/medicos/login";}
 
+        model.addAttribute("medico", medico);
         model.addAttribute("nombre", medico.getNombre());
+
+        List<HorarioModel> horarios = horarioService.buscarPorMedico(medico.getIdentificacion());
+        model.addAttribute("horarios", horarios);
+
         return "medicos/MedicoGestionHorarios";
     }
+
+
+    @PostMapping("/medicos/MedicoGestionHorario")
+    public String MedicosHorariosGuardar(@RequestParam("fecha") String fecha,
+                                         @RequestParam("hora") String hora,
+                                         @RequestParam("precio") float precio,
+                                         Model model, HttpSession session){
+
+        MedicoModel medico = (MedicoModel) session.getAttribute("medico");
+
+        if (medico == null) {
+            System.out.println("No se encontro un medico en la sesion");
+            return "redirect:/medicos/login";
+        }
+
+        HorarioModel horario = new HorarioModel();
+        horario.setId(UUID.randomUUID().toString());
+        horario.setFecha(fecha);
+        horario.setHora(hora);
+        horario.setDisponible(true);
+        horario.setMedicoID(medico.getIdentificacion());
+        horario.setPrecio(precio);
+
+        horarioService.registrarHorario(horario);
+
+
+        return "redirect:/medicos/MedicoGestionHorarios";
+    }
+
+    @PostMapping("/medicos/MedicoGestionHorario/Eliminar")
+    public String MedicosHorariosEliminar(@RequestParam("idHorario") String Id,
+                                          Model model, HttpSession session){
+
+        horarioService.eliminarRegistro(Id);
+
+        return "redirect:/medicos/MedicoGestionHorarios";
+    }
+
 }
