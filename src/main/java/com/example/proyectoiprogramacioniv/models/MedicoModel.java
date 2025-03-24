@@ -13,6 +13,7 @@ public class MedicoModel {
     private boolean activo;
     private String especialidad;
     private String ubicacion;
+    private String presentacion;
 
     public MedicoModel() {}
     public MedicoModel(String identificacion, String nombre, String contrasenna) {
@@ -22,16 +23,9 @@ public class MedicoModel {
         this.activo = false;
         this.especialidad = "";
         this.ubicacion = "";
+        this.presentacion = "";
     }
 
-    public MedicoModel(String identificacion, String nombre, String contrasenna, boolean activo, String especialidad, String ubicacion) {
-        this.identificacion = identificacion;
-        this.nombre = nombre;
-        this.contrasenna = contrasenna;
-        this.activo = activo;
-        this.especialidad = especialidad;
-        this.ubicacion = ubicacion;
-    }
 
     // getters
     public String getIdentificacion() {return identificacion;}
@@ -40,6 +34,7 @@ public class MedicoModel {
     public boolean isActivo() {return activo;}
     public String getEspecialidad() {return especialidad;}
     public String getUbicacion() {return ubicacion;}
+    public String getPresentacion() {return presentacion;}
 
     // setters
     public void setNombre(String nombre) {this.nombre = nombre;}
@@ -48,5 +43,6 @@ public class MedicoModel {
     public void setActivo(boolean activo) {this.activo = activo;}
     public void setEspecialidad(String especialidad) {this.especialidad = especialidad;}
     public void setUbicacion(String ubicacion) {this.ubicacion = ubicacion;}
+    public void setPresentacion(String presentacion) {this.presentacion = presentacion;}
 
 }

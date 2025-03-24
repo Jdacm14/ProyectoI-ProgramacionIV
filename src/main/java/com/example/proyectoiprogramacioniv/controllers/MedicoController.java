@@ -64,12 +64,19 @@ public class MedicoController {
                 session.setAttribute("tipo", "medico");
                 return "redirect:/medicos/esperaAprobacion"; // Redirige a la vista de espera
             }
+            // Si no ha especificado la especialidad o su ubicación lo redirige al medicoPerfil
+            if(medico.getEspecialidad() == "" || medico.getUbicacion() == "" ) {
+                model.addAttribute("medico", medico);
+                session.setAttribute("tipo", "medico");
+                session.setAttribute("medico", medico); // Agrega esta línea
+                return "redirect:/medicos/MedicoPerfil";
+            }
 
             // Si el médico está activo, permite el acceso
             model.addAttribute("medico", medico);
             session.setAttribute("tipo", "medico");
             session.setAttribute("medico", medico); //Para pasar el medico al medicoPerfil
-            return "redirect:/medicos/MedicoPerfil"; // Ahora sí redirige al perfil
+            return "redirect:/medicos/MedicoGestionCitas"; // Ahora sí redirige al perfil
         } else {
             model.addAttribute("error", "Identificación incorrecta");
             return "medicos/login"; // Mantiene la vista de login con el error
@@ -140,6 +147,7 @@ public class MedicoController {
     public String ActualizarPerfil (@RequestParam("nombre") String nombre,
                                     @RequestParam("especialidad") String especialidad,
                                     @RequestParam("ubicacion") String ubicacion,
+                                    @RequestParam("presentacion") String presentacion,
                                     Model model, HttpSession session){
 
          MedicoModel medico = (MedicoModel) session.getAttribute("medico");
@@ -151,6 +159,7 @@ public class MedicoController {
          medico.setNombre(nombre);
          medico.setEspecialidad(especialidad);
          medico.setUbicacion(ubicacion);
+         medico.setPresentacion(presentacion);
 
          medicoRepository.save(medico); //Guarda los cambios en la base de datos
          session.setAttribute("medico", medico);
@@ -219,6 +228,7 @@ public class MedicoController {
                                           Model model, HttpSession session){
 
         horarioService.eliminarRegistro(Id);
+
         return "redirect:/medicos/MedicoGestionHorarios";
     }
 
