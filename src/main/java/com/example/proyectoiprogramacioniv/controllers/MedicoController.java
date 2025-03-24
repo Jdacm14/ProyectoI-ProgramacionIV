@@ -44,29 +44,31 @@ public class MedicoController {
                 return "medicos/login"; // Mantiene la vista de login con el error
             }
 
-            // Si la contraseña es correcta, ahora sí verificar si el médico está activo
+            // Si la contraseña es correcta, ahora verificar si el médico está activo
             if (!medico.getActivo()) {
                 model.addAttribute("medico", medico);
                 session.setAttribute("tipo", "medico");
                 return "redirect:/medicos/esperaAprobacion"; // Redirige a la vista de espera
             }
 
+            // Si no ha especificado la especialidad o su ubicación lo redirige al medicoPerfil
             if(medico.getEspecialidad() == null || medico.getUbicacion() == null) {
                 model.addAttribute("medico", medico);
                 session.setAttribute("tipo", "medico");
+                session.setAttribute("medico", medico); // Agrega esta línea
                 return "redirect:/medicos/MedicoPerfil";
             }
+
 
             // Si el médico está activo, permite el acceso
             model.addAttribute("medico", medico);
             session.setAttribute("tipo", "medico");
-            return "redirect:/medicos/MedicoGestionCitas"; // Ahora sí redirige al perfil
+            return "redirect:/medicos/MedicoGestionCitas"; // Redirige al perfil del médico
         } else {
             model.addAttribute("error", "Identificación incorrecta");
             return "medicos/login"; // Mantiene la vista de login con el error
         }
     }
-
 
     // Registro de médico
     @GetMapping("medicos/registro")
@@ -111,15 +113,62 @@ public class MedicoController {
         return "medicos/esperaAprobacion";
     }
 
+    //Ingreso al perfil
     @GetMapping("medicos/MedicoPerfil")
-    public String MedicoPerfil() {
+    public String MedicoPerfil(HttpSession session,
+                               Model model) {
+        MedicoModel medico = (MedicoModel) session.getAttribute("medico");
+
+        if (medico == null) {
+            System.out.println("No se puede obtener un medico");
+            return "redirect:/medicos/login";
+        }
+        model.addAttribute("medico", medico);
+
         return "medicos/MedicoPerfil";
     }
+    //Editar informacion del perfil
+    @PostMapping("/medicos/MedicoPerfil")
+    public String ActualizarPerfil (@RequestParam("nombre") String nombre,
+                                    @RequestParam("especialidad") String especialidad,
+                                    @RequestParam("ubicacion") String ubicacion,
+                                    Model model, HttpSession session){
 
-    @GetMapping("medicos/MedicoGestionCitas")
-    public String MedicoGestionCitas() {
+         MedicoModel medico = (MedicoModel) session.getAttribute("medico");
+         if (medico == null) {
+             System.out.println("No se puede obtener un medico");
+             return "redirect:/medicos/login";
+         }
+
+         medico.setNombre(nombre);
+         medico.setEspecialidad(especialidad);
+         medico.setUbicacion(ubicacion);
+
+         medicoRepository.save(medico); //Guarda los cambios en la base de datos
+         session.setAttribute("medico", medico);
+
+        return "redirect:/medicos/MedicoGestionCitas";
+    }
+
+    @GetMapping("/medicos/MedicoGestionCitas")
+    public String MedicoGestionCitas(Model model, HttpSession session) {
+        MedicoModel medico = (MedicoModel) session.getAttribute("medico");
+        // Si no hay un médico en la sesión , redirige a login
+        if (medico == null) { return "redirect:/medicos/login"; }
+
+        model.addAttribute("nombre", medico.getNombre());
         return "medicos/MedicoGestionCitas";
     }
 
 
+    @GetMapping("/medicos/MedicoGestionHorarios")
+    public String MedicoGestionHorarios(Model model, HttpSession session) {
+
+        MedicoModel medico = (MedicoModel) session.getAttribute("medico");
+
+        if (medico == null) { return "redirect:/medicos/login";}
+
+        model.addAttribute("nombre", medico.getNombre());
+        return "medicos/MedicoGestionHorarios";
+    }
 }
