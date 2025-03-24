@@ -39,4 +39,6 @@ public class HorarioService {
         horarioRepository.save(horario);
     }
 
+    public void eliminarRegistro(String identificacion) {horarioRepository.deleteById(identificacion);}
+
 }

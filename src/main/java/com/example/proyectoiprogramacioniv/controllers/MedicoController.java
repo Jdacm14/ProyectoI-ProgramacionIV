@@ -13,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 import java.util.UUID;
 
 import java.util.Optional;
@@ -31,6 +33,8 @@ public class MedicoController {
 
     @Autowired
     private HorarioRepository horarioRepository;
+
+    //---------------------------  login ----------------------------------
 
     // Muestra el login para los médicos
     @GetMapping("medicos/login")
@@ -72,7 +76,7 @@ public class MedicoController {
         }
     }
 
-
+//------------------------  Registro  -----------------------------------------------
     // Registro de médico
     @GetMapping("medicos/registro")
     public String registro() {
@@ -116,6 +120,7 @@ public class MedicoController {
         return "medicos/esperaAprobacion";
     }
 
+    //--------------------------------  Medico Perfil --------------------------
     //Ingreso al perfil
     @GetMapping("medicos/MedicoPerfil")
     public String MedicoPerfil(HttpSession session,
@@ -152,7 +157,7 @@ public class MedicoController {
 
         return "redirect:/medicos/MedicoGestionCitas";
     }
-
+//------------------------------- Gestion Citas -----------------------------------------
     @GetMapping("/medicos/MedicoGestionCitas")
     public String MedicoGestionCitas(Model model, HttpSession session) {
 
@@ -165,7 +170,7 @@ public class MedicoController {
         return "medicos/MedicoGestionCitas";
     }
 
-
+//--------------------------------------Gestion Horarios -------------------------------------
     @GetMapping("/medicos/MedicoGestionHorarios")
     public String MedicoGestionHorarios(Model model, HttpSession session) {
 
@@ -175,6 +180,10 @@ public class MedicoController {
 
         model.addAttribute("medico", medico);
         model.addAttribute("nombre", medico.getNombre());
+
+        List<HorarioModel> horarios = horarioService.buscarPorMedico(medico.getIdentificacion());
+        model.addAttribute("horarios", horarios);
+
         return "medicos/MedicoGestionHorarios";
     }
 
@@ -202,6 +211,14 @@ public class MedicoController {
         horarioService.registrarHorario(horario);
 
 
+        return "redirect:/medicos/MedicoGestionHorarios";
+    }
+
+    @PostMapping("/medicos/MedicoGestionHorario/Eliminar")
+    public String MedicosHorariosEliminar(@RequestParam("idHorario") String Id,
+                                          Model model, HttpSession session){
+
+        horarioService.eliminarRegistro(Id);
         return "redirect:/medicos/MedicoGestionHorarios";
     }
 

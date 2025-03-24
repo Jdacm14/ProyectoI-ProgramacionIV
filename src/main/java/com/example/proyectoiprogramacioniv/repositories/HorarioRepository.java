@@ -10,9 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface HorarioRepository extends JpaRepository<HorarioModel, Long> {
+public interface HorarioRepository extends JpaRepository<HorarioModel, String> {
     Optional<HorarioModel> findByIdentificacion(String identificacion);
     List<HorarioModel> findByMedicoID(String medicoID);
-    List<HorarioModel> findAll();
+   // List<HorarioModel> findAll();
+   // void deleteById(String identificacion);
 }
 

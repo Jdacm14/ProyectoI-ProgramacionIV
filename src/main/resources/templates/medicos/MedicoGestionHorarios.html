@@ -60,33 +60,30 @@
         <table>
                 <thead>
                 <tr>
-                    <th>Especialidad</th>
                     <th>Fecha</th>
                     <th>Hora</th>
                     <th>Precio</th>
+                    <th></th>
 
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Odontologia</td>
-                    <td>2025-03-12</td>
-                    <td>09:00 AM</td>
-                    <td>60 000</td>
-                </tr>
-                <tr>
-                    <td>Dermatologia</td>
-                    <td>2025-03-11</td>
-                    <td>11:30 AM</td>
-                    <td>120 000</td>
+                <tr th:each="horario : ${horarios}">
+                    <td th:text="${horario.getFecha()}" ></td>
+                    <td th:text="${horario.getHora()}"></td>
+                    <td th:text="${horario.getPrecio()}" ></td>
+                    <td>
+                        <form th:action="@{/medicos/MedicoGestionHorario/Eliminar}" method="post">
+                        <input type="hidden" name="idHorario" th:value="${horario.getId()}">
+                        <button type="submit"><!--class="Clase CSS"--> Eliminar</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
         </table>
     </section>
 
 </main>
-
-
 
 <div th:replace="~{layouts/footer}"></div>
 
