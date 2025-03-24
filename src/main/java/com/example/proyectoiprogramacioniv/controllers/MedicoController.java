@@ -196,6 +196,7 @@ public class MedicoController {
         horario.setFecha(fecha);
         horario.setHora(hora);
         horario.setDisponible(true);
+        horario.setMedicoID(medico.getIdentificacion());
         horario.setPrecio(precio);
 
         horarioService.registrarHorario(horario);
