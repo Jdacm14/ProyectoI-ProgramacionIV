@@ -15,5 +15,6 @@ public interface HorarioRepository extends JpaRepository<HorarioModel, String> {
     List<HorarioModel> findByMedicoID(String medicoID);
    // List<HorarioModel> findAll();
    // void deleteById(String identificacion);
+
 }
 

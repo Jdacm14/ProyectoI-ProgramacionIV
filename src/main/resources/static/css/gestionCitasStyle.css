@@ -117,26 +117,27 @@ textarea.entradaFormulario {
     resize: none;
     min-height: 40px;
 }
-
-/* Botón */
-.botonEnviar {
-    background-color: #40916c;
-    color: white;
+button {
+    padding: 10px 20px;
     border: none;
-    padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+/* Botón */
+
+.botonGuardar {
+    background-color: #40916c;
+    color: white;
+    font-weight: bold;
 }
 
-.botonEnviar:hover {
+.botonGuardar:hover {
     background-color: #2d6a4f;
 }
 
-.botonEnviar:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
+
 
 .botonHorario {
     background-color: #40916c;
@@ -167,4 +168,23 @@ textarea.entradaFormulario {
         width: 100%;
         padding: 10px;
     }
+}
+.botonEliminar {
+    background-color: #d9534f; /* Rojo */
+    color: white;
+    font-weight: bold;
+}
+
+.botonEliminar:hover {
+    background-color: #c12e2a; /* Rojo más oscuro */
+}
+
+/* Estilos adicionales */
+.botonGuardar, .botonEliminar {
+    display: inline-block;
+    text-align: center;
+}
+
+button:focus {
+    outline: none;
 }

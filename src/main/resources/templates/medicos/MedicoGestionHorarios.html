@@ -18,50 +18,62 @@
 
 <main class="contenedorCitas">
     <section class="tablaCitas">
-        <!-- Agregar un nuevo horario-->
-        <p> <span style="color: #2d6a4f; font-weight: bold">Crear un nuevo horario </span> </p>
-        <form action="/medicos/MedicoGestionHorario" method="post">
+        <p><span style="color: #2d6a4f; font-weight: bold">Crear un nuevo horario</span></p>
+        <form action="/medicos/MedicoGestionHorarios" method="post">
             <table>
                 <thead>
                 <tr>
                     <th>Especialidad</th>
                     <th>Fecha</th>
-                    <th>Hora</th>
+                    <th>Hora Inicio</th>
+                    <th>Hora Fin</th>
+                    <th>Frecuencia (min)</th>
                     <th>Precio</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td><input type="text" id="especialidad" name="especialidad" th:value="${medico.getEspecialidad()}" required readonly style="color: #999999"></td>
-                    <td><input type="date" id="fecha" name="fecha" required></td>
-                    <td><input type="time" id="hora" name="hora" required></td>
-                    <td><input  type="number" id="precio"  name="precio" required></td>
-                    <td><input type="submit" value="Enviar"> </td>
+                    <td>
+                        <input type="text" id="especialidad" name="especialidad"
+                               th:value="${medico.getEspecialidad()}" required readonly style="color: #999999">
+                    </td>
+
+
+                    <td><input type="date" id="fechaSeleccionada" name="fechaSeleccionada" required></td>
+
+                    <td><input type="time" id="horaInicio" name="horaInicio" required></td>
+                    <td><input type="time" id="horaFin" name="horaFin" required></td>
+                    <td>
+                        <select name="frecuencia" required>
+                            <option value="15">15 min</option>
+                            <option value="30">30 min</option>
+                            <option value="45">45 min</option>
+                            <option value="60">1 hora</option>
+                        </select>
+                    </td>
+                    <td><input type="number" id="precio" name="precio" required></td>
+                    <td><button type="submit" class="botonGuardar" value="Guardar">Guardar</button></td>
                 </tr>
                 </tbody>
             </table>
+
         </form>
 
 
     </section>
 
-    <section class="filtros">
-
-        <label for="filtroFecha" class="etiquetaFormulario">Filtrar por Fecha:</label>
-        <input type="date" id="filtroFecha" class="entradaFormulario" placeholder="Ingrese la fecha del horario">
-
-        <label for="filtroPrecio" class="etiquetaFormulario">Filtrar por el Precio:</label>
-        <input type="number" id="filtroPrecio" class="entradaFormulario" placeholder="Ingrese el monto">
-    </section>
 
     <section class="tablaCitas">
         <p> <span style="color: #2d6a4f; font-weight: bold">Lista de Horarios </span> </p>
         <table>
                 <thead>
                 <tr>
+                    <th>Día de la semana</th>
                     <th>Fecha</th>
-                    <th>Hora</th>
+                    <th>Hora Inicio</th>
+                    <th>Hora Fin </th>
+                    <th>Frecuencia</th>
                     <th>Precio</th>
                     <th></th>
 
@@ -69,13 +81,16 @@
                 </thead>
                 <tbody>
                 <tr th:each="horario : ${horarios}">
+                    <td th:text="${horario.getDiaSemana()}" ></td>
                     <td th:text="${horario.getFecha()}" ></td>
-                    <td th:text="${horario.getHora()}"></td>
+                    <td th:text="${horario.getHoraInicio()}"></td>
+                    <td th:text="${horario.getHoraFin()}" ></td>
+                    <td th:text="${horario.getFrecuenciaMinutos()}" ></td>
                     <td th:text="${horario.getPrecio()}" ></td>
                     <td>
-                        <form th:action="@{/medicos/MedicoGestionHorario/Eliminar}" method="post">
+                        <form th:action="@{/medicos/MedicoGestionHorarios/Eliminar}" method="post">
                         <input type="hidden" name="idHorario" th:value="${horario.getId()}">
-                        <button type="submit"><!--class="Clase CSS"--> Eliminar</button>
+                        <button type="submit" class = botonEliminar> Eliminar</button>
                         </form>
                     </td>
                 </tr>

@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-import java.util.UUID;
-
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class MedicoController {
@@ -193,12 +191,65 @@ public class MedicoController {
 
 //--------------------------------------Gestion Horarios -------------------------------------
 
+//    @GetMapping("/medicos/MedicoGestionHorarios")
+//    public String MedicoGestionHorarios(Model model, HttpSession session) {
+//
+//        MedicoModel medico = (MedicoModel) session.getAttribute("medico");
+//
+//        if (medico == null) { return "redirect:/medicos/login";}
+//
+//        model.addAttribute("medico", medico);
+//        model.addAttribute("nombre", medico.getNombre());
+//
+//        List<HorarioModel> horarios = horarioService.buscarPorMedico(medico.getIdentificacion());
+//        model.addAttribute("horarios", horarios);
+//
+//        return "medicos/MedicoGestionHorarios";
+//    }
+//
+//
+//    @PostMapping("/medicos/MedicoGestionHorario")
+//    public String MedicosHorariosGuardar(@RequestParam("fecha") String fecha,
+//                                         @RequestParam("hora") String hora,
+//                                         @RequestParam("precio") float precio,
+//                                         Model model, HttpSession session){
+//
+//        MedicoModel medico = (MedicoModel) session.getAttribute("medico");
+//
+//        if (medico == null) {
+//            System.out.println("No se encontro un medico en la sesion");
+//            return "redirect:/medicos/login";
+//        }
+//
+//        HorarioModel horario = new HorarioModel();
+//        horario.setId(UUID.randomUUID().toString());
+//        horario.setFecha(fecha);
+//        horario.setHora(hora);
+//        horario.setDisponible(true);
+//        horario.setMedicoID(medico.getIdentificacion());
+//        horario.setPrecio(precio);
+//
+//        horarioService.registrarHorario(horario);
+//
+//
+//        return "redirect:/medicos/MedicoGestionHorarios";
+//    }
+//
+//    @PostMapping("/medicos/MedicoGestionHorario/Eliminar")
+//    public String MedicosHorariosEliminar(@RequestParam("idHorario") String Id,
+//                                          Model model, HttpSession session){
+//
+//        horarioService.eliminarRegistro(Id);
+//
+//        return "redirect:/medicos/MedicoGestionHorarios";
+//    }
+
+
     @GetMapping("/medicos/MedicoGestionHorarios")
     public String MedicoGestionHorarios(Model model, HttpSession session) {
-
         MedicoModel medico = (MedicoModel) session.getAttribute("medico");
 
-        if (medico == null) { return "redirect:/medicos/login";}
+        if (medico == null) { return "redirect:/medicos/login"; }
 
         model.addAttribute("medico", medico);
         model.addAttribute("nombre", medico.getNombre());
@@ -209,40 +260,83 @@ public class MedicoController {
         return "medicos/MedicoGestionHorarios";
     }
 
-
-    @PostMapping("/medicos/MedicoGestionHorario")
-    public String MedicosHorariosGuardar(@RequestParam("fecha") String fecha,
-                                         @RequestParam("hora") String hora,
+    @PostMapping("/medicos/MedicoGestionHorarios")
+    public String MedicosHorariosGuardar(@RequestParam("fechaSeleccionada") String fechaSeleccionada,
+                                         @RequestParam("horaInicio") String horaInicio,
+                                         @RequestParam("horaFin") String horaFin,
+                                         @RequestParam("frecuencia") int frecuencia,
                                          @RequestParam("precio") float precio,
-                                         Model model, HttpSession session){
+                                         HttpSession session) {
 
         MedicoModel medico = (MedicoModel) session.getAttribute("medico");
 
         if (medico == null) {
-            System.out.println("No se encontro un medico en la sesion");
             return "redirect:/medicos/login";
         }
 
-        HorarioModel horario = new HorarioModel();
-        horario.setId(UUID.randomUUID().toString());
-        horario.setFecha(fecha);
-        horario.setHora(hora);
-        horario.setDisponible(true);
-        horario.setMedicoID(medico.getIdentificacion());
-        horario.setPrecio(precio);
+        // Convertir la fecha seleccionada (String) a un objeto Date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date fecha = dateFormat.parse(fechaSeleccionada);
 
-        horarioService.registrarHorario(horario);
+            // Calcular el día de la semana
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(fecha);
+            int diaSemana = calendar.get(Calendar.DAY_OF_WEEK); // 1 = Domingo, 2 = Lunes, ..., 7 = Sábado
 
+            // Convertir el valor numérico del día a un String
+            String diaNombre = "";
+            switch (diaSemana) {
+                case Calendar.SUNDAY:
+                    diaNombre = "Domingo";
+                    break;
+                case Calendar.MONDAY:
+                    diaNombre = "Lunes";
+                    break;
+                case Calendar.TUESDAY:
+                    diaNombre = "Martes";
+                    break;
+                case Calendar.WEDNESDAY:
+                    diaNombre = "Miércoles";
+                    break;
+                case Calendar.THURSDAY:
+                    diaNombre = "Jueves";
+                    break;
+                case Calendar.FRIDAY:
+                    diaNombre = "Viernes";
+                    break;
+                case Calendar.SATURDAY:
+                    diaNombre = "Sábado";
+                    break;
+            }
+
+            // Formatear la fecha en el formato dd/MM/yyyy
+            SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd/MM/yyyy");
+            String fechaFormateada = dateFormat2.format(fecha);  // La fecha en formato dd/MM/yyyy
+
+            // Crear el horario y guardar los datos
+            HorarioModel horario = new HorarioModel();
+            horario.setId(UUID.randomUUID().toString());
+            horario.setMedicoID(medico.getIdentificacion());
+            horario.setDiaSemana(diaNombre);  // Guardamos el nombre del día
+            horario.setFecha(fechaFormateada);  // Guardamos la fecha en formato dd/MM/yyyy
+            horario.setHoraInicio(horaInicio);
+            horario.setHoraFin(horaFin);
+            horario.setFrecuenciaMinutos(frecuencia);
+            horario.setPrecio(precio);
+            horario.setDisponible(true);
+
+            horarioService.registrarHorario(horario);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return "redirect:/medicos/MedicoGestionHorarios";
     }
 
-    @PostMapping("/medicos/MedicoGestionHorario/Eliminar")
-    public String MedicosHorariosEliminar(@RequestParam("idHorario") String Id,
-                                          Model model, HttpSession session){
-
+    @PostMapping("/medicos/MedicoGestionHorarios/Eliminar")
+    public String MedicosHorariosEliminar(@RequestParam("idHorario") String Id) {
         horarioService.eliminarRegistro(Id);
-
         return "redirect:/medicos/MedicoGestionHorarios";
     }
 
