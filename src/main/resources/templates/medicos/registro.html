@@ -4,22 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
-    <link rel="stylesheet" href="http://localhost:8080/css/loginRegistroStyle.css">
+    <link rel="stylesheet" th:href="@{/css/loginRegistroStyle.css}">
 </head>
 <body>
 <div th:replace="~{layouts/header}"></div>
-<div class="contenedorPrincipal">
+
+<main class="contenedorPrincipal">
     <div class="formulario">
         <h2 class="titulo">Registro</h2>
-
-        <!-- Si hay un mensaje de error, lo mostramos aquí -->
         <div th:if="${error}" class="mensajeError" th:text="${error}"></div>
 
-        <!-- Formulario para el registro -->
-        <form class="contenidoFormulario" action="registro" method="post">
+        <form class="contenidoFormulario" th:action="@{/medicos/registro}" method="post">
             <div class="grupoFormulario">
                 <label for="idUsuario" class="etiquetaFormulario">ID de Usuario</label>
-                <input type="text" class="entradaFormulario" id="idUsuario" name="identificacion" placeholder="Ingrese su ID" required>
+                <input type="text" class="entradaFormulario" id="idUsuario" name="identificacion" pattern="[0-9]{9}" title="Debe ingresar exactamente 9 dígitos" required>
             </div>
             <div class="grupoFormulario">
                 <label for="nombreUsuario" class="etiquetaFormulario">Nombre</label>
@@ -30,13 +28,17 @@
                 <input type="password" class="entradaFormulario" id="contrasenaUsuario" name="contrasenna" placeholder="Ingrese su Contraseña" required>
             </div>
             <div class="grupoFormulario">
-                <input type="password" class="entradaFormulario" id="confirmarContrasena" name="confirmarContrasenna" placeholder="Confirme su Contraseña" required>
+                <label for="confirmarContrasena"></label><input type="password" class="entradaFormulario" id="confirmarContrasena" name="confirmarContrasenna" placeholder="Confirme su Contraseña" required>
             </div>
             <button type="submit" class="botonEnviar">Registrarse</button>
         </form>
-        <p class="enlace-formulario">¿Ya tienes cuenta? <a href="login" class="enlace">Inicia sesión aquí</a></p>
+
+        <p class="enlace-formulario">¿Ya tienes cuenta?
+            <a th:href="@{/medicos/login}" class="enlace">Inicia sesión aquí</a>
+        </p>
     </div>
-</div>
+</main>
+
 <div th:replace="~{layouts/footer}"></div>
 </body>
-</html>
+

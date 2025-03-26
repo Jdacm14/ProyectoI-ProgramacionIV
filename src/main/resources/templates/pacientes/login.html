@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión</title>
-    <link rel="stylesheet" href="http://localhost:8080/css/loginRegistroStyle.css">
+    <link rel="stylesheet" th:href="@{/css/loginRegistroStyle.css}">
 </head>
 <body>
 <div th:replace="~{layouts/header}"></div>
@@ -19,7 +19,7 @@
         <form class="contenidoFormulario" method="post">
             <div class="grupoFormulario">
                 <label for="idUsuario" class="etiquetaFormulario">ID de Usuario</label>
-                <input type="text" class="entradaFormulario" id="idUsuario" name="identificacion" required>
+                <input type="text" class="entradaFormulario" id="idUsuario" name="identificacion" pattern="[0-9]{9}" title="Debe ingresar exactamente 9 dígitos" required>
             </div>
             <div class="grupoFormulario">
                 <label for="contrasenaUsuario" class="etiquetaFormulario">Contraseña</label>

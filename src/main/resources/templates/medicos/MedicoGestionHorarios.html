@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Horarios</title>
+
+    <link rel="stylesheet" th:href="@{/css/gestionCitasStyle.css}">
+</head>
+
+<body>
+<div th:replace="~{layouts/header}"></div>
+
+<section class="contenedorHorario">
+<!-- Reenviar de nuevo a gestion citas -->
+    <a href="/medicos/MedicoGestionCitas" class="botonHorario">  Gestión de Citas </a>
+</section>
+
+<main class="contenedorCitas">
+    <section class="tablaCitas">
+        <p><span style="color: #2d6a4f; font-weight: bold">Crear un nuevo horario</span></p>
+        <form action="/medicos/MedicoGestionHorarios" method="post">
+            <table>
+                <thead>
+                <tr>
+                    <th>Especialidad</th>
+                    <th>Fecha</th>
+                    <th>Hora Inicio</th>
+                    <th>Hora Fin</th>
+                    <th>Frecuencia</th>
+                    <th>Precio</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <input type="text" id="especialidad" name="especialidad"
+                               th:value="${medico.getEspecialidad()}" required readonly style="color: #999999">
+                    </td>
+
+
+                    <td><input type="date" id="fechaSeleccionada" name="fechaSeleccionada" required></td>
+
+                    <td><input type="time" id="horaInicio" name="horaInicio" required></td>
+                    <td><input type="time" id="horaFin" name="horaFin" required></td>
+                    <td>
+                        <select name="frecuencia" required>
+                            <option value="15">15 min</option>
+                            <option value="30">30 min</option>
+                            <option value="45">45 min</option>
+                            <option value="60">1 hora</option>
+                        </select>
+                    </td>
+                    <td><input type="number" id="precio" name="precio" required></td>
+                    <td><button type="submit" class="botonGuardar" value="Guardar">Guardar</button></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </form>
+
+
+    </section>
+
+
+    <section class="tablaCitas">
+        <p> <span style="color: #2d6a4f; font-weight: bold">Lista de Horarios </span> </p>
+        <table>
+                <thead>
+                <tr>
+                    <th>Día de la semana</th>
+                    <th>Fecha</th>
+                    <th>Hora Inicio</th>
+                    <th>Hora Fin </th>
+                    <th>Frecuencia</th>
+                    <th>Precio</th>
+                    <th></th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="horario : ${horarios}">
+                    <td th:text="${horario.getDiaSemana()}" ></td>
+                    <td th:text="${horario.getFecha()}" ></td>
+                    <td th:text="${horario.getHoraInicio()}"></td>
+                    <td th:text="${horario.getHoraFin()}" ></td>
+                    <td th:text="${horario.getFrecuenciaMinutos()}" ></td>
+                    <td th:text="${horario.getPrecio()}" ></td>
+                    <td>
+                        <form th:action="@{/medicos/MedicoGestionHorarios/Eliminar}" method="post">
+                        <input type="hidden" name="idHorario" th:value="${horario.getId()}">
+                        <button type="submit" class = botonEliminar> Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+        </table>
+    </section>
+
+</main>
+
+<div th:replace="~{layouts/footer}"></div>
+
+</body>
+</html>

@@ -3,6 +3,7 @@ package com.example.proyectoiprogramacioniv.controllers;
 import com.example.proyectoiprogramacioniv.services.PacienteService;
 import com.example.proyectoiprogramacioniv.models.PacienteModel;
 import com.example.proyectoiprogramacioniv.repositories.PacienteRepository;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,14 +30,15 @@ public class PacienteController {
     @PostMapping("pacientes/login")
     public String loginPaciente(@RequestParam("identificacion") String identificacion,
                                 @RequestParam("contrasenna") String contrasenna,
-                                Model model) {
+                                Model model, HttpSession session) {
         Optional<PacienteModel> pacienteModel = pacienteRepository.findByIdentificacion(identificacion);
 
         // Si el paciente existe
         if (pacienteModel.isPresent()) {
             if (pacienteService.validarContrasenna(identificacion, contrasenna)) {
                 model.addAttribute("paciente", pacienteModel.get());
-                return "pacientes/PacienteBuscarCita"; // Redirige a la página de buscar cita
+                session.setAttribute("tipo", "paciente"); // Establecemos el rol
+                return "redirect:/pacientes/PacienteBuscarCita"; // Redirige a la página de buscar cita
             } else {
                 model.addAttribute("error", "Contraseña incorrecta");
                 return "pacientes/login"; // Redirige al login con el mensaje de error
@@ -83,5 +85,10 @@ public class PacienteController {
         model.addAttribute("mensaje", "Registro exitoso, por favor inicia sesión");
         return "redirect:/pacientes/login";  // Redirige correctamente al login
         // Redirige al login después del registro exitoso
+    }
+
+    @GetMapping("pacientes/PacienteBuscarCita")
+    public String PacienteBuscarCita() {
+        return "pacientes/PacienteBuscarCita";
     }
 }

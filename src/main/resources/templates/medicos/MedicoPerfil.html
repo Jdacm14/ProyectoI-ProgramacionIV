@@ -4,32 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil Medico</title>
-    <link rel="stylesheet" href="css/indexStyle.css">
-    <link rel="stylesheet" href="css/perfilMedicoStyle.css">
+    <link rel="stylesheet" th:href="@{css/perfilMedicoSytle.css}">
+
 </head>
 <body>
+    <div th:replace="~{layouts/header}"></div> <!-- Header arriba -->
+
     <div class="contenedorPerfil">
         <img src="img/PPSnape.jpg" alt="Foto de Perfil" class="imagenPerfil">
-        <form class="contenidoFormulario">
+        <form class="contenidoFormulario" action="/medicos/MedicoPerfil" method="post">
             <div class="grupoFormulario">
                 <label for="nombre" class="etiquetaFormulario">Nombre</label>
-                <input type="text" class="entradaFormulario" id="nombre" required>
+                <input type="text" class="entradaFormulario" id="nombre" name="nombre" th:value="${medico.getNombre()}"  required>
             </div>
             <div class="grupoFormulario">
                 <label for="especialidad" class="etiquetaFormulario">Especialidad</label>
-                <input type="text" class="entradaFormulario" id="especialidad" required>
+                <input type="text" class="entradaFormulario" id="especialidad" name="especialidad" th:value="${medico.getEspecialidad()}"  required>
             </div>
             <div class="grupoFormulario">
                 <label for="presentacion" class="etiquetaFormulario">Presentación</label>
-                <textarea class="entradaFormulario" id="presentacion" rows="3" required></textarea>
-            </div>
-            <div class="grupoFormulario">
-                <label for="costo" class="etiquetaFormulario">Costo de Consulta</label>
-                <input type="number" class="entradaFormulario" id="costo" required>
+                <textarea class="entradaFormulario" id="presentacion" name="presentacion" th:value="${medico.getPresentacion()}" rows="3" required></textarea>
             </div>
             <div class="grupoFormulario">
                 <label for="ubicacion" class="etiquetaFormulario">Ubicación</label>
-                <input type="text" class="entradaFormulario" id="ubicacion" required>
+                <input type="text" class="entradaFormulario" id="ubicacion" name="ubicacion" th:value="${medico.getUbicacion()}"  required>
             </div>
             <div class="grupoFormulario">
                 <label for="fotoPerfil" class="etiquetaFormulario">Foto de Perfil</label>
@@ -38,6 +36,6 @@
             <button type="submit" class="botonEnviar">Guardar Cambios</button>
         </form>
     </div>
-       
+    <div th:replace="~{layouts/footer}"></div>
 </body>
 </html>

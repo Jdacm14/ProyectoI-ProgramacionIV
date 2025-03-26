@@ -5,12 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Citas</title>
 
-    <link rel="stylesheet" href="css/gestionCitasStyle.css">
+    <link rel="stylesheet" th:href="@{/css/gestionCitasStyle.css}">
+
 </head>
 <body>
-        <h1 class="titulo">Dr. Juan Pérez - Gestión de Citas</h1>
-   
-    
+<div th:replace="~{layouts/header}"></div>
+
+<h1 th:text="'Lic.  ' + ${nombre} + ' - Gestión de Citas'" class="titulo"></h1>
+
+    <section class="contenedorHorario">
+    <a href="/medicos/MedicoGestionHorarios" class="botonHorario">  Gestión de Horarios </a>
+    </section>
+
     <main class="contenedorCitas">
         <section class="filtros">
             <label for="filtroEstado" class="etiquetaFormulario">Filtrar por estado:</label>
@@ -57,7 +63,8 @@
             </table>
         </section>
     </main>
-    
- 
+
+<div th:replace="~{layouts/footer}"></div>
+
 </body>
 </html>

@@ -1,5 +1,6 @@
 /* Header */
 .header {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -22,6 +23,8 @@
 .hospital-nombre {
     font-size: 18px;
     font-weight: bold;
+    text-decoration: none;
+    color: white;
 }
 
 .header-center {
@@ -46,6 +49,20 @@
     color: #f1faee;
 }
 
+/* Efecto de Hover*/
+
+.mainmenu:hover img {
+    transform: scale(1.2); /*Efecto de Zoom al pasar el cursor que me recomendo chatgpt*/
+}
+
+.maintitle {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
 /* Responsividad */
 @media (max-width: 768px) {
     .header {
@@ -63,22 +80,32 @@
     }
 }
 
+.nombre-enlace {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nombre-enlace:hover {
+    color: #f1faee;
+}
+
 /* Footer */
 .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    width: 100%;
     background-color: #2d6a4f;
     padding: 15px 30px;
     color: white;
-    font-family: Arial, sans-serif;
-    position: relative;
-    bottom: 0;
-    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    margin-top: auto; /* Hace que el footer quede al final sin tapar contenido */
 }
-
 .footer-left {
     font-size: 16px;
+    margin-left:0 ;
 }
 
 .social-link img {
@@ -93,13 +120,16 @@
 
 .footer-right {
     font-size: 14px;
+    margin-right: 0;
+    padding-right: 3%;
+    white-space: nowrap;
 }
 
 /* Responsividad */
 @media (max-width: 768px) {
     .footer {
         flex-direction: column;
-        text-align: center;
+
     }
 
     .footer-left, .footer-center, .footer-right {
@@ -109,4 +139,16 @@
     .footer-center {
         justify-content: center;
     }
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
 }
