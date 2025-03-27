@@ -6,6 +6,7 @@
     <title>Buscar Cita Médica</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
+
 <body>
 
 <div th:replace="~{layouts/header}"></div>
@@ -17,11 +18,9 @@
     <label for="especialidad">Especialidad:</label>
     <select name="especialidad" id="especialidad">
         <option value="">Seleccione</option>
-        <option value="Cardiología">Cardiología</option>
-        <option value="Pediatría">Pediatría</option>
-        <option value="Dermatología">Dermatología</option>
-        <!-- Agregar más especialidades según necesidad -->
+        <option th:each="especialidad : ${especialidades}" th:value="${especialidad}" th:text="${especialidad}"></option>
     </select>
+
 
     <label for="ubicacion">Ciudad:</label>
     <input type="text" id="ubicacion" name="ubicacion" placeholder="Ingrese ciudad">
@@ -31,16 +30,17 @@
 
 <!-- Mostrar resultados de búsqueda -->
 <div th:if="${not #lists.isEmpty(medicos)}">
-    <h2>Médicos Disponibles</h2>
+    <h1>Lista de Médicos y Horarios Disponibles</h1>
 
+    <!-- Listar médicos -->
     <div th:each="medico : ${medicos}" class="medico-card">
-        <h3 th:text="${medico.nombre}"></h3>
+        <h2 th:text="${medico.nombre}"></h2>
         <p><strong>Especialidad:</strong> <span th:text="${medico.especialidad}"></span></p>
         <p><strong>Ubicación:</strong> <span th:text="${medico.ubicacion}"></span></p>
-        <p><strong>Presentación:</strong> <span th:text="${medico.presentacion}"></span></p>
+
 
         <!-- Mostrar horarios disponibles -->
-        <h4>Horarios Disponibles</h4>
+        <h3>Horarios Disponibles</h3>
         <table>
             <tr>
                 <th>Fecha</th>
@@ -56,19 +56,19 @@
                 <td th:text="${horario.precio}"></td>
                 <td>
                     <form th:if="${horario.disponible}" method="post" action="/paciente/reservar">
-                        <input type="hidden" name="horarioID" th:value="${horario.identificacion}">
+                        <input type="hidden" name="horarioID" th:value="${horario.id}">
                         <button type="submit">Reservar</button>
                     </form>
                     <span th:if="${!horario.disponible}" class="reservado">Reservado</span>
                 </td>
-            </tr>
+
+
         </table>
     </div>
-</div>
 
 <p th:if="${#lists.isEmpty(medicos)}">No se encontraron médicos con los criterios seleccionados.</p>
 
 <div th:replace="~{layouts/footer}"></div>
-
+</div>
 </body>
 </html>

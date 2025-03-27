@@ -15,9 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalTime;
+import java.util.*;
+
 @Controller
 
 public class PacienteController {
@@ -106,30 +106,24 @@ public class PacienteController {
 
 
     @GetMapping("/pacientes/buscar")
-    public String buscarCita(@RequestParam(name = "medicoID", required = false) String medicoID,
-                             @RequestParam(name = "fecha", required = false) String fecha,
+    public String buscarCita(
                              Model model) {
+        List<MedicoModel> medicos = medicoRepository.findAll();
 
-        // Obtener todos los médicos disponibles
-        List<MedicoModel> listaDeMedicos = medicoRepository.findAll();
-        model.addAttribute("medicos", listaDeMedicos);
+        // Obtener todos los horarios disponibles
+        List<HorarioModel> horarios = horarioRepository.findAll();
 
-        // Obtener los horarios disponibles si se proporciona médico y fecha
-        if (medicoID != null && fecha != null) {
-            List<HorarioModel> horariosDisponibles = horarioRepository.findByMedicoIDAndFechaAndDisponible(medicoID, fecha, true);
-            model.addAttribute("horarios", horariosDisponibles);
-        }
-        // Retornamos la vista con los horarios
-        return "pacientes/PacienteBuscarCita";
-    }
-
-
-    @GetMapping("/buscar-horarios")
-    public String buscarHorarios(Model model) {
-        List<HorarioModel> horarios = horarioService.buscarHorariosDisponibles();
+        // Pasar datos a la vista
+        model.addAttribute("medicos", medicos);
         model.addAttribute("horarios", horarios);
+
+
+        List<String> especialidades = medicoRepository.findDistinctEspecialidades();
+        model.addAttribute("especialidades", especialidades);
         return "pacientes/PacienteBuscarCita";
     }
+
+
 
 
 }
