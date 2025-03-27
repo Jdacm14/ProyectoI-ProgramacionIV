@@ -24,6 +24,10 @@ public class HorarioService {
         this.horarioRepository = horarioRepository;
     }
 
+    public List<HorarioModel> buscarHorariosDisponibles() {
+        return horarioRepository.findByDisponible(true);
+    }
+
 
     public List<HorarioModel> obtenerTodosLosHorarios() {
         return horarioRepository.findAll();
@@ -89,6 +93,8 @@ public class HorarioService {
         }
         return horariosDisponibles;
     }
+
+
 
 
 }

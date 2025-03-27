@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface MedicoRepository extends JpaRepository <MedicoModel, Long> {
     Optional<MedicoModel> findByIdentificacion(String identificacion);
     List<MedicoModel> findAll();
+    List<MedicoModel> findByEspecialidadAndUbicacion(String especialidad, String ubicacion);
+
 }

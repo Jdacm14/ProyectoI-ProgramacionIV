@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Controller
@@ -339,5 +342,51 @@ public class MedicoController {
         horarioService.eliminarRegistro(Id);
         return "redirect:/medicos/MedicoGestionHorarios";
     }
+
+    ///---------------------------------   Ayuda Dios  -----------------------------------
+
+    @PostMapping("/medico/crearHorarios")
+    public String crearHorarios(@RequestParam(name = "medicoID",required = false) String medicoID,
+                                @RequestParam("fecha") String fecha,
+                                @RequestParam("horaInicio") String horaInicio,
+                                @RequestParam("horaFin") String horaFin,
+                                @RequestParam("frecuencia") int frecuenciaMinutos,
+                                Model model) {
+
+        // Convertimos las horas de inicio y fin a objetos LocalTime
+        LocalTime inicio = LocalTime.parse(horaInicio);
+        LocalTime fin = LocalTime.parse(horaFin);
+
+        // Lista para almacenar los horarios generados
+        List<HorarioModel> horariosGenerados = new ArrayList<>();
+
+        // Generamos los horarios a partir de la fecha, horaInicio y horaFin
+        while (inicio.isBefore(fin)) {
+            String horaFinFormato = inicio.plusMinutes(frecuenciaMinutos).toString();
+
+            // Creamos un nuevo horario para cada franja
+            HorarioModel horario = new HorarioModel();
+            horario.setMedicoID(medicoID);
+            horario.setFecha(fecha);
+            horario.setHoraInicio(inicio.toString());
+            horario.setHoraFin(horaFinFormato);
+            horario.setDisponible(true); // Por defecto el horario está disponible
+            horario.setPrecio(50); // Ejemplo de precio, puede ser un valor dinámico
+            horario.setFrecuenciaMinutos(frecuenciaMinutos);
+            horario.setDiaSemana(LocalDate.parse(fecha).getDayOfWeek().toString());
+
+            horariosGenerados.add(horario);
+
+            // Aumentamos el inicio de la cita en la frecuencia
+            inicio = inicio.plusMinutes(frecuenciaMinutos);
+        }
+
+        // Guardamos los horarios generados en la base de datos
+        horarioRepository.saveAll(horariosGenerados);
+
+        model.addAttribute("mensaje", "Horarios generados correctamente");
+        return "redirect:/medico/dashboard"; // Redirige a una vista que el médico pueda ver
+    }
+
 
 }

@@ -1,7 +1,6 @@
 package com.example.proyectoiprogramacioniv.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -12,13 +11,14 @@ public class HorarioModel {
     @Id
     private String identificacion;
     private String medicoID;
-    private Boolean disponible; //= false;
+    private Boolean disponible;
     private float precio;
     private int frecuenciaMinutos;
     private String diaSemana;
     private String horaInicio;
     private String horaFin;
     private String fecha;
+
 
 
     public HorarioModel() {}

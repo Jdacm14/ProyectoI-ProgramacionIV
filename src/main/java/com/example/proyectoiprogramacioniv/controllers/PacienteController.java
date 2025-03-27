@@ -1,5 +1,10 @@
 package com.example.proyectoiprogramacioniv.controllers;
 
+import com.example.proyectoiprogramacioniv.models.HorarioModel;
+import com.example.proyectoiprogramacioniv.models.MedicoModel;
+import com.example.proyectoiprogramacioniv.repositories.HorarioRepository;
+import com.example.proyectoiprogramacioniv.repositories.MedicoRepository;
+import com.example.proyectoiprogramacioniv.services.HorarioService;
 import com.example.proyectoiprogramacioniv.services.PacienteService;
 import com.example.proyectoiprogramacioniv.models.PacienteModel;
 import com.example.proyectoiprogramacioniv.repositories.PacienteRepository;
@@ -9,6 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 @Controller
 
@@ -19,6 +27,15 @@ public class PacienteController {
 
     @Autowired
     private PacienteRepository pacienteRepository;
+
+    @Autowired
+    private MedicoRepository medicoRepository;
+
+    @Autowired
+    private HorarioRepository horarioRepository;
+
+    @Autowired
+    private HorarioService horarioService;
 
     // Muestra el login para los pacientes
     @GetMapping("pacientes/login")
@@ -38,7 +55,7 @@ public class PacienteController {
             if (pacienteService.validarContrasenna(identificacion, contrasenna)) {
                 model.addAttribute("paciente", pacienteModel.get());
                 session.setAttribute("tipo", "paciente"); // Establecemos el rol
-                return "redirect:/pacientes/PacienteBuscarCita"; // Redirige a la página de buscar cita
+                return "redirect:/pacientes/buscar"; // Redirige a la página de buscar cita
             } else {
                 model.addAttribute("error", "Contraseña incorrecta");
                 return "pacientes/login"; // Redirige al login con el mensaje de error
@@ -87,8 +104,32 @@ public class PacienteController {
         // Redirige al login después del registro exitoso
     }
 
-    @GetMapping("pacientes/PacienteBuscarCita")
-    public String PacienteBuscarCita() {
+
+    @GetMapping("/pacientes/buscar")
+    public String buscarCita(@RequestParam(name = "medicoID", required = false) String medicoID,
+                             @RequestParam(name = "fecha", required = false) String fecha,
+                             Model model) {
+
+        // Obtener todos los médicos disponibles
+        List<MedicoModel> listaDeMedicos = medicoRepository.findAll();
+        model.addAttribute("medicos", listaDeMedicos);
+
+        // Obtener los horarios disponibles si se proporciona médico y fecha
+        if (medicoID != null && fecha != null) {
+            List<HorarioModel> horariosDisponibles = horarioRepository.findByMedicoIDAndFechaAndDisponible(medicoID, fecha, true);
+            model.addAttribute("horarios", horariosDisponibles);
+        }
+        // Retornamos la vista con los horarios
         return "pacientes/PacienteBuscarCita";
     }
+
+
+    @GetMapping("/buscar-horarios")
+    public String buscarHorarios(Model model) {
+        List<HorarioModel> horarios = horarioService.buscarHorariosDisponibles();
+        model.addAttribute("horarios", horarios);
+        return "pacientes/PacienteBuscarCita";
+    }
+
+
 }
