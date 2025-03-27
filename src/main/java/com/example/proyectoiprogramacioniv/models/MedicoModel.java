@@ -1,5 +1,5 @@
 package com.example.proyectoiprogramacioniv.models;
-import com.example.proyectoiprogramacioniv.models.HorarioModel;
+
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -16,9 +16,6 @@ public class MedicoModel {
     private String especialidad;
     private String ubicacion;
     private String presentacion;
-
-
-
 
 
     public MedicoModel() {}
@@ -52,7 +49,4 @@ public class MedicoModel {
     public void setEspecialidad(String especialidad) {this.especialidad = especialidad;}
     public void setUbicacion(String ubicacion) {this.ubicacion = ubicacion;}
     public void setPresentacion(String presentacion) {this.presentacion = presentacion;}
-
-
-
 }
