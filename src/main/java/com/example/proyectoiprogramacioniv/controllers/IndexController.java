@@ -32,10 +32,13 @@ public class IndexController {
         // Redirige al index
         return "index";
     }
-    @GetMapping("/buscar-cita")
+    @GetMapping("/PacienteBuscar")
     public String buscarCita() {
-        return "pacientes/PacienteBuscarCita"; // Coincide con la ubicación en templates/pacientes/
+        return "redirect:/pacientes/buscar"; // Coincide con la ubicación en templates/pacientes/
     }
+
+
+
     // login
     @GetMapping("/prelogin")
     public String prelogin() {

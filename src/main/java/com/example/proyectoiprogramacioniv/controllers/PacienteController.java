@@ -1,5 +1,10 @@
 package com.example.proyectoiprogramacioniv.controllers;
 
+import com.example.proyectoiprogramacioniv.models.HorarioModel;
+import com.example.proyectoiprogramacioniv.models.MedicoModel;
+import com.example.proyectoiprogramacioniv.repositories.HorarioRepository;
+import com.example.proyectoiprogramacioniv.repositories.MedicoRepository;
+import com.example.proyectoiprogramacioniv.services.HorarioService;
 import com.example.proyectoiprogramacioniv.services.PacienteService;
 import com.example.proyectoiprogramacioniv.models.PacienteModel;
 import com.example.proyectoiprogramacioniv.repositories.PacienteRepository;
@@ -9,7 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.*;
+
 @Controller
 
 public class PacienteController {
@@ -19,6 +27,15 @@ public class PacienteController {
 
     @Autowired
     private PacienteRepository pacienteRepository;
+
+    @Autowired
+    private MedicoRepository medicoRepository;
+
+    @Autowired
+    private HorarioRepository horarioRepository;
+
+    @Autowired
+    private HorarioService horarioService;
 
     // Muestra el login para los pacientes
     @GetMapping("pacientes/login")
@@ -38,7 +55,7 @@ public class PacienteController {
             if (pacienteService.validarContrasenna(identificacion, contrasenna)) {
                 model.addAttribute("paciente", pacienteModel.get());
                 session.setAttribute("tipo", "paciente"); // Establecemos el rol
-                return "redirect:/pacientes/PacienteBuscarCita"; // Redirige a la página de buscar cita
+                return "redirect:/pacientes/buscar"; // Redirige a la página de buscar cita
             } else {
                 model.addAttribute("error", "Contraseña incorrecta");
                 return "pacientes/login"; // Redirige al login con el mensaje de error
@@ -87,8 +104,26 @@ public class PacienteController {
         // Redirige al login después del registro exitoso
     }
 
-    @GetMapping("pacientes/PacienteBuscarCita")
-    public String PacienteBuscarCita() {
+
+    @GetMapping("/pacientes/buscar")
+    public String buscarCita(
+                             Model model) {
+        List<MedicoModel> medicos = medicoRepository.findAll();
+
+        // Obtener todos los horarios disponibles
+        List<HorarioModel> horarios = horarioRepository.findAll();
+
+        // Pasar datos a la vista
+        model.addAttribute("medicos", medicos);
+        model.addAttribute("horarios", horarios);
+
+
+        List<String> especialidades = medicoRepository.findDistinctEspecialidades();
+        model.addAttribute("especialidades", especialidades);
         return "pacientes/PacienteBuscarCita";
     }
+
+
+
+
 }

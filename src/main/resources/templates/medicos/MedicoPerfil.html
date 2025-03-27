@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil Medico</title>
-    <link rel="stylesheet" th:href="@{css/indexStyle.css}">
-    <link rel="stylesheet" th:href="@{/css/listadoMedicoStyle.css}">
+    <link rel="stylesheet" th:href="@{css/perfilMedicoSytle.css}">
+
 </head>
 <body>
     <div th:replace="~{layouts/header}"></div> <!-- Header arriba -->
@@ -23,11 +23,7 @@
             </div>
             <div class="grupoFormulario">
                 <label for="presentacion" class="etiquetaFormulario">Presentación</label>
-                <textarea class="entradaFormulario" id="presentacion" rows="3" required></textarea>
-            </div>
-            <div class="grupoFormulario">
-                <label for="costo" class="etiquetaFormulario">Costo de Consulta</label>
-                <input type="number" class="entradaFormulario" id="costo" required>
+                <textarea class="entradaFormulario" id="presentacion" name="presentacion" th:value="${medico.getPresentacion()}" rows="3" required></textarea>
             </div>
             <div class="grupoFormulario">
                 <label for="ubicacion" class="etiquetaFormulario">Ubicación</label>
