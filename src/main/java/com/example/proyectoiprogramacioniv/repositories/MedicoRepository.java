@@ -13,6 +13,7 @@ public interface MedicoRepository extends JpaRepository <MedicoModel, Long> {
     Optional<MedicoModel> findByIdentificacion(String identificacion);
     List<MedicoModel> findAll();
     List<MedicoModel> findByEspecialidadAndUbicacion(String especialidad, String ubicacion);
+    List<MedicoModel> findByEspecialidad(String especialidad);
+    List<MedicoModel> findByUbicacion(String ubicacion);
     @Query("SELECT DISTINCT m.especialidad FROM MedicoModel m")
-    List<String> findDistinctEspecialidades();
-}
+    List<String> findDistinctEspecialidades();}

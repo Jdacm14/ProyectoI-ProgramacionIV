@@ -107,7 +107,7 @@ public class PacienteController {
 
     @GetMapping("/pacientes/buscar")
     public String buscarCita(
-                             Model model) {
+            Model model) {
         List<MedicoModel> medicos = medicoRepository.findAll();
 
         // Obtener todos los horarios disponibles

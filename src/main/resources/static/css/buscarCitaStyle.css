@@ -1,12 +1,9 @@
-
 body {
     font-family: Arial, sans-serif;
     background-color: #eaf4f0;
     margin: 0;
     padding: 0;
 }
-
-
 
 .titulo {
     margin: 0;
@@ -22,30 +19,62 @@ body {
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Filtros */
+/* Formulario de búsqueda */
+.form-busqueda {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 50px;
+    flex-wrap: wrap;
+    padding: 15px;
+    border: 2px solid #abf5dc; /* Borde amarillo */
+    border-radius: 10px; /* Esquinas curvas */
+    background-color: #e0ece7; /* Un ligero fondo para mejor contraste */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
 .filtros {
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: space-between;
-    margin-bottom: 20px;
+    align-items: flex-end;
+    gap: 10px;
 }
+
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    height: 40px;
+    padding: 5px 15px;
+    font-size: 16px;
+    align-self: flex-end;
+    background-color: #abf5dc; /* Fondo amarillo */
+    border-color: #004444;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #004444; /* Efecto hover */
+}
+
 
 .filtros label {
-    width: 100%;
     font-weight: bold;
     color: #1b4332;
+    margin-bottom: 3px;
 }
 
-.filtros .entradaFormulario {
-    width: calc(50% - 10px);
+.filtros .entradaFormulario,
+.filtros select,
+.filtros input {
     padding: 10px;
     border: 1px solid #a3c4bc;
     border-radius: 5px;
     font-size: 16px;
 }
-
-
 
 /* Lista de médicos */
 .listaMedicos {
@@ -56,60 +85,72 @@ body {
     color: #40916c;
 }
 
-/* Tarjeta de médico */
-.tarjetaMedico {
+/* Tarjeta de médico (más compacta) */
+.medico-card {
     background-color: white;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 10px;
+    padding: 10px 15px;
+    margin: 10px auto;
+    border-radius: 8px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
 }
 
-.nombreMedico {
-    margin: 0;
+.medico-card h2 {
+    margin: 0 0 5px 0;
     font-size: 18px;
     color: #2d6a4f;
 }
 
-.especialidad,
-.ubicacion {
+.medico-card p {
+    margin: 3px 0;
     color: #555;
-    margin: 5px 0;
 }
 
-/* Horarios */
-.horarios {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 10px;
+/* Tabla: ahora ocupa el 100% del ancho de la tarjeta */
+.medico-card table {
+    width: 100%;
+    margin: 8px 0;
+    border-collapse: collapse;
 }
 
-.espacio {
-    padding: 8px 12px;
+.medico-card th,
+.medico-card td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.medico-card th {
+    background-color: #f2f2f2;
+    color: #1b4332;
+}
+
+/* Botón para reservar y estilo para "Reservado" */
+.medico-card button {
+    padding: 8px 10px;
+    border: none;
     border-radius: 5px;
     font-size: 14px;
     cursor: pointer;
-    border: none;
     transition: background-color 0.3s;
-}
-
-.espacio.disponible {
-    background-color: #52b788;
+    background-color: #40916c;
     color: white;
 }
 
-.espacio.disponible:hover {
-    background-color: #40916c;
+.medico-card button:hover {
+    background-color: #2d6a4f;
 }
 
-.espacio.reservado {
+.reservado {
+    padding: 8px 10px;
+    border-radius: 5px;
+    font-size: 14px;
     background-color: #bbbbbb;
     color: white;
-    cursor: not-allowed;
 }
 
-/* Botones de acción */
+/* Botones de acción (si son necesarios) */
 .acciones {
     margin-top: 15px;
     display: flex;
@@ -118,7 +159,7 @@ body {
 
 .botonReservar,
 .botonHorario {
-    padding: 10px;
+    padding: 8px 10px;
     border: none;
     border-radius: 5px;
     font-size: 14px;
@@ -147,9 +188,5 @@ body {
 @media (max-width: 768px) {
     .filtros {
         flex-direction: column;
-    }
-
-    .filtros .entradaFormulario {
-        width: 100%;
     }
 }
