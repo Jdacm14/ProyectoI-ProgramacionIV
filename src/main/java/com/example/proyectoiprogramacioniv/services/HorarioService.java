@@ -32,10 +32,6 @@ public class HorarioService {
     public HorarioService(HorarioRepository horarioRepository) {
         this.horarioRepository = horarioRepository;
     }
-/*
-    public List<HorarioModel> buscarHorariosDisponibles() {
-        return horarioRepository.findByDisponible(true);
-    }*/
 
     public List<HorarioModel> obtenerTodosLosHorarios() {
         return horarioRepository.findAll();

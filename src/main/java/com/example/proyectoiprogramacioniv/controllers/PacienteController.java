@@ -19,7 +19,6 @@ import java.time.LocalTime;
 import java.util.*;
 
 @Controller
-
 public class PacienteController {
 
     @Autowired
@@ -106,23 +105,49 @@ public class PacienteController {
 
 
     @GetMapping("/pacientes/buscar")
-    public String buscarCita(
-            Model model) {
+    public String buscarCita(@RequestParam(value = "especialidad", required = false) String especialidad,
+                             @RequestParam(value = "ubicacion", required = false) String ubicacion,
+                             Model model) {
         List<MedicoModel> medicos = medicoRepository.findAll();
+        LocalDate currentDate = LocalDate.now();
+        LocalDate fechaLimite = currentDate.plusDays(3);
+        List<HorarioModel> allHorarios = horarioRepository.findAll();
+        List<HorarioModel> horarios = new ArrayList<>();
+        List<MedicoModel> medicosFiltrados = new ArrayList<>();
 
-        // Obtener todos los horarios disponibles
-        List<HorarioModel> horarios = horarioRepository.findAll();
+        for (HorarioModel horario : allHorarios) {
+            LocalDate fechaHorario = LocalDate.parse(horario.getFecha());
+            if (!fechaHorario.isBefore(currentDate) && !fechaHorario.isAfter(fechaLimite)) {
+                horarios.add(horario);
+            }
+        }
 
-        // Pasar datos a la vista
-        model.addAttribute("medicos", medicos);
+        for (MedicoModel medico : medicos) {
+            boolean coincideEspecialidad = (especialidad == null || especialidad.isEmpty() ||
+                    (medico.getEspecialidad() != null && medico.getEspecialidad().equals(especialidad)));
+
+            boolean coincideUbicacion = (ubicacion == null || ubicacion.isEmpty() ||
+                    medico.getUbicacion() != null && medico.getUbicacion().toLowerCase().contains(ubicacion.toLowerCase()));
+
+            boolean tieneHorarios = false;
+            for (HorarioModel horario : horarios) {
+                if (horario.getMedicoID().equals(medico.getIdentificacion())) {
+                    tieneHorarios = true;
+                    break;
+                }
+            }
+
+            if (coincideEspecialidad && coincideUbicacion && tieneHorarios) {
+                medicosFiltrados.add(medico);
+            }
+        }
+
+        model.addAttribute("medicos", medicosFiltrados);
         model.addAttribute("horarios", horarios);
+        model.addAttribute("especialidades", medicoRepository.findDistinctEspecialidades());
 
-
-        List<String> especialidades = medicoRepository.findDistinctEspecialidades();
-        model.addAttribute("especialidades", especialidades);
         return "pacientes/PacienteBuscarCita";
     }
-
 
 
 
