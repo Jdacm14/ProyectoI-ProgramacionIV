@@ -13,35 +13,20 @@ public class IndexController {
     // Dirige al index
     @GetMapping("/")
     public String index(HttpSession session) {
-        // Si la sesión contiene el atributo 'tipo', significa que el usuario está logueado.
-        if (session.getAttribute("tipo") != null) {
-            // Si hay un 'tipo' en la sesión, eliminamos el atributo 'tipo' (logout)
-            session.removeAttribute("tipo");
-        }
-        // Redirige al index
+        session.invalidate();
         return "index";
     }
 
     @GetMapping("/index")
     public String inicio(HttpSession session) {
-        // Si la sesión contiene el atributo 'tipo', significa que el usuario está logueado.
-        if (session.getAttribute("tipo") != null) {
-            // Si hay un 'tipo' en la sesión, eliminamos el atributo 'tipo' (logout)
-            session.removeAttribute("tipo");
-        }
-        // Redirige al index
+        session.invalidate();
         return "index";
     }
-    @GetMapping("/PacienteBuscarCita")
-    public String buscarCita() {
-        return "redirect:/pacientes/PacienteBuscarCita"; // Coincide con la ubicación en templates/pacientes/
-    }
-
-
 
     // login
     @GetMapping("/prelogin")
-    public String prelogin() {
+    public String prelogin(HttpSession session) {
+        session.invalidate();
         return "prelogin";
     }
 

@@ -122,6 +122,9 @@ public class PacienteController {
             }
         }
 
+        horarios.sort(Comparator.comparing(HorarioModel::getFecha)
+                .thenComparing(HorarioModel::getHoraInicio));
+
         for (MedicoModel medico : medicos) {
             boolean coincideEspecialidad = (especialidad == null || especialidad.isEmpty() ||
                     (medico.getEspecialidad() != null && medico.getEspecialidad().equals(especialidad)));
