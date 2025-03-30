@@ -14,8 +14,8 @@
 <div class="contenedorBusqueda">
     <h1>Buscar y Reservar Cita Médica</h1>
 
-    <!-- Formulario de búsqueda -->
-    <form method="get" action="/paciente/buscar" class="form-busqueda">
+    <!-- Formulario de búsqueda usando POST -->
+    <form method="get" action="/pacientes/buscar" class="form-busqueda">
         <div class="filtros">
             <div class="campo">
                 <label for="especialidad">Especialidad:</label>
@@ -26,54 +26,55 @@
             </div>
             <div class="campo">
                 <label for="ubicacion">Ciudad:</label>
-                <input type="text" id="ubicacion" name="ubicacion" placeholder="Ingrese ciudad">
+                <input type="text" id="ubicacion" name="ubicacion" placeholder="Ingrese ciudad" value="">
             </div>
         </div>
         <button type="submit">Buscar</button>
     </form>
 
 
+
     <!-- Mostrar resultados de búsqueda -->
     <div th:if="${not #lists.isEmpty(medicos)}" class="listaMedicos">
         <h1>Lista de Médicos y Horarios Disponibles</h1>
 
-    <!-- Listar médicos -->
-    <div th:each="medico : ${medicos}" th:if="${medico.activo}" class="medico-card">
-        <h2 th:text="${medico.nombre}"></h2>
-        <p><strong>Especialidad:</strong> <span th:text="${medico.especialidad}"></span></p>
-        <p><strong>Ubicación:</strong> <span th:text="${medico.ubicacion}"></span></p>
+        <!-- Listar médicos -->
+        <div th:each="medico : ${medicos}" th:if="${medico.activo}" class="medico-card">
+            <h2 th:text="${medico.nombre}"></h2>
+            <p><strong>Especialidad:</strong> <span th:text="${medico.especialidad}"></span></p>
+            <p><strong>Ubicación:</strong> <span th:text="${medico.ubicacion}"></span></p>
 
-        <!-- Mostrar horarios disponibles -->
-        <h3>Horarios Disponibles</h3>
-        <table>
-            <tr>
-                <th>Fecha</th>
-                <th>Hora Inicio</th>
-                <th>Hora Fin</th>
-                <th>Precio</th>
-                <th>Acción</th>
-            </tr>
-            <tr th:each="horario : ${horarios}" th:if="${horario.medicoID == medico.identificacion}">
-                <!-- Mostrar solo los horarios correspondientes al médico actual -->
-                <td th:text="${horario.fecha}"></td>
-                <td th:text="${horario.horaInicio}"></td>
-                <td th:text="${horario.horaFin}"></td>
-                <td th:text="${horario.precio}"></td>
-                <td>
-                    <!-- Verificar si pacienteID está vacío -->
-                    <form th:if="${#strings.isEmpty(horario.pacienteID)}" method="post" action="/paciente/reservar">
-                        <input type="hidden" name="horarioID" th:value="${horario.id}">
-                        <button type="submit">Reservar</button>
-                    </form>
-                    <span th:if="${!#strings.isEmpty(horario.pacienteID)}" class="reservado">Reservado</span>
-                </td>
-            </tr>
-        </table>
+            <!-- Mostrar horarios disponibles -->
+            <h3>Horarios Disponibles</h3>
+            <table>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Hora Inicio</th>
+                    <th>Hora Fin</th>
+                    <th>Precio</th>
+                    <th>Acción</th>
+                </tr>
+                <tr th:each="horario : ${horarios}" th:if="${horario.medicoID == medico.identificacion}">
+                    <!-- Mostrar solo los horarios correspondientes al médico actual -->
+                    <td th:text="${horario.fecha}"></td>
+                    <td th:text="${horario.horaInicio}"></td>
+                    <td th:text="${horario.horaFin}"></td>
+                    <td th:text="${horario.precio}"></td>
+                    <td>
+                        <!-- Verificar si pacienteID está vacío -->
+                        <form th:if="${#strings.isEmpty(horario.pacienteID)}" method="post" action="/paciente/reservar">
+                            <input type="hidden" name="horarioID" th:value="${horario.id}">
+                            <button type="submit">Reservar</button>
+                        </form>
+                        <span th:if="${!#strings.isEmpty(horario.pacienteID)}" class="reservado">Reservado</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <p th:if="${#lists.isEmpty(medicos)}">No se encontraron médicos con los criterios seleccionados.</p>
+
     </div>
-
-    <p th:if="${#lists.isEmpty(medicos)}">No se encontraron médicos con los criterios seleccionados.</p>
-
-</div>
 </div>
 <div th:replace="~{layouts/footer}"></div>
 
