@@ -1,7 +1,9 @@
 package com.example.proyectoiprogramacioniv.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class MedicoModel {
@@ -15,6 +17,7 @@ public class MedicoModel {
     private String ubicacion;
     private String presentacion;
 
+
     public MedicoModel() {}
     public MedicoModel(String identificacion, String nombre, String contrasenna) {
         this.identificacion = identificacion;
@@ -24,6 +27,7 @@ public class MedicoModel {
         this.especialidad = "";
         this.ubicacion = "";
         this.presentacion = "";
+
     }
 
 
@@ -36,6 +40,7 @@ public class MedicoModel {
     public String getUbicacion() {return ubicacion;}
     public String getPresentacion() {return presentacion;}
 
+
     // setters
     public void setNombre(String nombre) {this.nombre = nombre;}
     public void setIdentificacion(String identificacion) {this.identificacion = identificacion;}
@@ -44,5 +49,4 @@ public class MedicoModel {
     public void setEspecialidad(String especialidad) {this.especialidad = especialidad;}
     public void setUbicacion(String ubicacion) {this.ubicacion = ubicacion;}
     public void setPresentacion(String presentacion) {this.presentacion = presentacion;}
-
 }

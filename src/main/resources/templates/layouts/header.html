@@ -35,7 +35,7 @@
 
         <!-- Para usuarios no logueados -->
         <div th:if="${session.tipo == null}">
-            <a th:href="@{/buscar-cita}" class="nav-link">Buscar</a>
+            <a th:href="@{/pacientes/buscar}" class="nav-link">Buscar</a>
             <a th:href="@{/prelogin}" class="nav-link">Login</a>
         </div>
     </nav>

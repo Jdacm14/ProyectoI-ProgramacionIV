@@ -13,17 +13,29 @@ import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
+import java.util.*;
+
 @Service
 public class HorarioService {
 
     private final HorarioRepository horarioRepository;
 
-
     @Autowired
     public HorarioService(HorarioRepository horarioRepository) {
         this.horarioRepository = horarioRepository;
     }
-
+/*
+    public List<HorarioModel> buscarHorariosDisponibles() {
+        return horarioRepository.findByDisponible(true);
+    }*/
 
     public List<HorarioModel> obtenerTodosLosHorarios() {
         return horarioRepository.findAll();
@@ -33,7 +45,7 @@ public class HorarioService {
         return horarioRepository.findByIdentificacion(identificacion);
     }
 
-    //Ver si sirve
+    // Ver si sirve
     public List<HorarioModel> buscarPorMedico(String medicoID) {
         return horarioRepository.findByMedicoID(medicoID);
     }
@@ -62,6 +74,7 @@ public class HorarioService {
         return hoy.with(TemporalAdjusters.nextOrSame(diaDeseado));
     }
 
+    // Aquí eliminamos la lógica del while, solo obtenemos los horarios fijos
     public List<HorarioModel> generarHorariosDisponibles(MedicoModel medico) {
         List<HorarioModel> horariosDisponibles = new ArrayList<>();
         List<HorarioModel> horariosFijos = buscarPorMedico(medico.getIdentificacion());
@@ -70,25 +83,20 @@ public class HorarioService {
             LocalDate fechaExacta = obtenerProximaFecha(horario.getDiaSemana());
             LocalTime inicio = LocalTime.parse(horario.getHoraInicio());
             LocalTime fin = LocalTime.parse(horario.getHoraFin());
-            int intervalo = horario.getFrecuenciaMinutos();
 
-            while (!inicio.isAfter(fin)) {
-                HorarioModel nuevoHorario = new HorarioModel();
-                nuevoHorario.setId(UUID.randomUUID().toString());
-                nuevoHorario.setMedicoID(medico.getIdentificacion());
-                nuevoHorario.setDiaSemana(horario.getDiaSemana());
-                nuevoHorario.setHoraInicio(inicio.toString());
-                nuevoHorario.setHoraFin(fin.toString());
-                nuevoHorario.setFrecuenciaMinutos(intervalo);
-                nuevoHorario.setPrecio(horario.getPrecio());
-                nuevoHorario.setDisponible(true);
+            // Solo agregamos el horario fijo sin el while
+            HorarioModel nuevoHorario = new HorarioModel();
+            nuevoHorario.setId(UUID.randomUUID().toString());
+            nuevoHorario.setMedicoID(medico.getIdentificacion());
+            nuevoHorario.setDiaSemana(horario.getDiaSemana());
+            nuevoHorario.setHoraInicio(inicio.toString());
+            nuevoHorario.setHoraFin(fin.toString());
+            nuevoHorario.setPrecio(horario.getPrecio());
+            nuevoHorario.setPacienteID(null);
 
-                horariosDisponibles.add(nuevoHorario);
-                inicio = inicio.plusMinutes(intervalo);
-            }
+            horariosDisponibles.add(nuevoHorario);
         }
+
         return horariosDisponibles;
     }
-
-
 }
