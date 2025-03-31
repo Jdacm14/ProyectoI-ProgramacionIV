@@ -18,6 +18,8 @@ public interface HorarioRepository extends JpaRepository<HorarioModel, String> {
     List<HorarioModel> findByMedicoIDAndFecha(String medicoID, String fecha);
 
     List<HorarioModel> findByFecha(String fecha);
+
+    List<HorarioModel> findByPacienteID(String pacienteID);
 /*
     List<HorarioModel> findByDisponible(Boolean disponible);
 

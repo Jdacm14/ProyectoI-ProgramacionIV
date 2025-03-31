@@ -6,7 +6,6 @@ import com.example.proyectoiprogramacioniv.repositories.AdministradorRepository;
 import com.example.proyectoiprogramacioniv.services.AdministradorService;
 import com.example.proyectoiprogramacioniv.services.MedicoService;
 import jakarta.servlet.http.HttpSession;
-import org.apache.coyote.http11.Http11InputBuffer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

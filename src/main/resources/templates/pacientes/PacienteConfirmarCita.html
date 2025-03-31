@@ -6,25 +6,41 @@ y asi -->
 iria como en Buscar cita y en horario Extendido
 -->
 
-<div class="popup-container">
-    <div class="popup-card">
-        <h2 class="popup-header">Confirmar Cita</h2>
+<!-- PacientesConfirmarCita.html -->
 
-        <div class="popup-content">
-            <h5 class="popup-title">Detalles de la Cita</h5>
-            <p><strong>Médico:</strong> Dr. Juan Pérez</p>
-            <p><strong>Especialidad:</strong> Cardiología</p>
-            <p><strong>Fecha:</strong> 12 de marzo de 2025</p>
-            <p><strong>Hora:</strong> 10:00 AM</p>
-            <p><strong>Ubicación:</strong> Clínica San José</p>
-        </div>
+<!-- HTML para el Popup -->
 
-        <div class="popup-buttons">
-            <button class="popup-btn confirm-btn">Confirmar Cita</button>
-            <button class="popup-btn cancel-btn">Cancelar</button>
-        </div>
+<div class="popup">
+    <h2>Confirmar Cita</h2>
+    <table>
+        <tr>
+            <th>Médico</th>
+            <th>Especialidad</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Ubicación</th>
+        </tr>
+        <tr>
+            <td th:text="'Lic.  ' + ${medico.nombre}"></td>
+            <td th:text="${medico.especialidad}"></td>
+            <td th:text="${horario.fecha}"></td>
+            <td th:text="${horario.horaInicio}"></td>
+            <td th:text="${horario.horaFin}"></td>
+            <td th:text="${medico.ubicacion}"></td>
+        </tr>
+    </table>
+
+    <div>
+        <form action="/paciente/confirmar" method="post">
+            <input type="hidden" name="horarioID" th:value="${horario.id}">
+            <button type="submit">Confirmar Cita</button>
+        </form>
+        <form action="/paciente/cancelar" method="post">
+            <button type="submit">Cancelar</button>
+        </form>
     </div>
 </div>
+
 
 
 <!--No le voy a poner un .css a este

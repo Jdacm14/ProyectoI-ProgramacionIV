@@ -17,6 +17,7 @@
                 <option value="todas">Todas</option>
                 <option value="pendiente">Pendiente</option>
                 <option value="completada">Completada</option>
+                <option value="cancelada">Cancelada</option>
             </select>
             
             <label for="filtroMedico" class="etiquetaFormulario">Filtrar por médico:</label>
@@ -36,20 +37,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Dr. Juan Pérez</td>
-                        <td>Cardiología</td>
-                        <td>2025-03-10</td>
-                        <td>10:00 AM</td>
-                        <td><span class="estado completada">Completada</span></td>
-                    </tr>
-                    <tr>
-                        <td>Dra. María López</td>
-                        <td>Dermatología</td>
-                        <td>2025-03-08</td>
-                        <td>02:00 PM</td>
-                        <td><span class="estado pendiente">Pendiente</span></td>
-                    </tr>
+                <tr th:each="horario : ${horarios}">
+                    <!-- Buscar el médico correspondiente -->
+                    <td th:with="medico=${medicos.?[id == horario.medicoID][0]}">
+                        <span th:text="${medico != null ? medico.nombre : 'Desconocido'}"></span>
+                    </td>
+                    <td th:with="medico=${medicos.?[id == horario.medicoID][0]}">
+                        <span th:text="${medico != null ? medico.ubicacion : 'N/A'}"></span>
+                    </td>
+                    <td th:text="${horario.fecha}"></td>
+                    <td th:text="${horario.horaInicio}"></td>
+                    <td>
+                        <span th:text="${horario.estado}" th:classappend="${horario.estado}"></span>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </section>
