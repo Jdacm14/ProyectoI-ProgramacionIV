@@ -18,7 +18,7 @@
 
         <!-- Mostrar opciones dependiendo del rol del usuario -->
         <div th:if="${session.tipo == 'paciente'}">
-            <a href="../pacientes/PacienteHistoricoCitas" class="nav-link">Historial</a>
+            <a th:href="@{/pacientes/PacienteCitas}" class="nav-link">Historial</a>
             <a th:href="@{/pacientes/buscar}" class="nav-link">Buscar</a>
             <a href="../index" class="nav-link">Logout</a>
 

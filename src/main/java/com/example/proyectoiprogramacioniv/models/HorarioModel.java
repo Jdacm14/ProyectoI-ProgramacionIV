@@ -14,6 +14,7 @@ public class HorarioModel {
     private String horaFin;
     private String fecha;
     private String pacienteID;
+    private String estado; // completada, pendiente
 
 
 
@@ -28,6 +29,7 @@ public class HorarioModel {
         this.horaFin = "";
         this.fecha = "";
         this.pacienteID = null;
+        this.estado = "";
     }
 
 
@@ -40,6 +42,7 @@ public class HorarioModel {
     public String getHoraFin() {return horaFin;}
     public String getFecha() {return fecha;}
     public String getPacienteID() {return pacienteID;}
+    public String getEstado() {return estado;}
 
     //  setters
     public void setId(String id) {this.identificacion = id;}
@@ -50,4 +53,5 @@ public class HorarioModel {
     public void setHoraFin(String horaFin) {this.horaFin = horaFin;}
     public void setFecha(String fecha) {this.fecha = fecha;}
     public void setPacienteID(String pacienteID) {this.pacienteID = pacienteID;}
+    public void setEstado(String estado) {this.estado = estado;}
 }

@@ -53,7 +53,7 @@ public class PacienteController {
             if (pacienteService.validarContrasenna(identificacion, contrasenna)) {
                 // Guardar en la sesión
                 session.setAttribute("paciente", pacienteModel.get());
-                session.setAttribute("tipo", "paciente"); // Establecemos el rol
+                session.setAttribute("tipo", "paciente");
                 return "redirect:/pacientes/buscar"; // Redirige a la página de buscar cita
             } else {
                 model.addAttribute("error", "Contraseña incorrecta");
@@ -234,10 +234,12 @@ public class PacienteController {
 
             // Asignar el paciente al horario y guardar en la base de datos
             horario.setPacienteID(paciente.getIdentificacion());
+            horario.setEstado("Pendiente");
             horarioRepository.save(horario);
 
             // Redirigir al listado de citas del paciente (ruta que programarás en el futuro)
-            return "redirect:/paciente/citas";
+            session.setAttribute("tipo", "paciente");
+            return "redirect:/pacientes/PacienteCitas";
         } else {
             // En caso de que el horario no exista, se regresa a la vista de búsqueda con error
             model.addAttribute("error", "Horario no disponible.");
@@ -255,6 +257,31 @@ public class PacienteController {
         // Al cancelar en el pop-up, simplemente se retorna a la vista de búsqueda de citas,
         // sin guardar ningún cambio y sin activar el pop-up (por lo que desaparece).
         return "redirect:/pacientes/buscar";
+    }
+
+    @GetMapping("/pacientes/PacienteCitas")
+    public String listarCitasPaciente(HttpSession session, Model model) {
+        // Verificar si hay sesión activa de paciente
+        if (session.getAttribute("tipo") == null || !session.getAttribute("tipo").equals("paciente")) {
+            return "redirect:/pacientes/login"; // Redirige si no hay sesión
+        }
+
+        // Obtener el paciente desde la sesión
+        PacienteModel paciente = (PacienteModel) session.getAttribute("paciente");
+
+        if (paciente == null) {
+            return "redirect:/pacientes/login"; // Si no hay paciente en la sesión, redirige al login
+        }
+
+        // Obtener las citas del paciente
+        List<HorarioModel> citas = horarioRepository.findByPacienteID(paciente.getIdentificacion());
+
+        // Agregar el paciente al modelo para pasar la información a la vista
+        model.addAttribute("paciente", paciente);  // Aquí agregamos el paciente al modelo
+        model.addAttribute("citas", citas);
+
+        // Redirigir a la vista donde se mostrarán las citas del paciente
+        return "pacientes/PacienteCitas";
     }
 
 }
