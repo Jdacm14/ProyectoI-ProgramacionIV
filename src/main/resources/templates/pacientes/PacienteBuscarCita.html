@@ -12,7 +12,7 @@
 <div th:replace="~{layouts/header}"></div>
 
 <div class="contenedorBusqueda">
-    <h1>Buscar y Reservar Cita Médica</h1>
+    <h1>Buscar y Reservar cita médica - <span th:if="${paciente != null}" th:text="${paciente.nombre}"></span></h1>
 
     <!-- Formulario de búsqueda usando POST -->
     <form method="get" action="/pacientes/buscar" class="form-busqueda">
@@ -41,6 +41,7 @@
             <h2 th:text="${medico.nombre}"></h2>
             <p><strong>Especialidad:</strong> <span th:text="${medico.especialidad}"></span></p>
             <p><strong>Ubicación:</strong> <span th:text="${medico.ubicacion}"></span></p>
+            <a th:href="@{/PacienteHorarioExtendido}" class="ver-mas">Ver más horarios</a>
 
             <!-- Mostrar horarios disponibles -->
             <h3>Horarios Disponibles</h3>
@@ -57,7 +58,7 @@
                     <td th:text="${horario.fecha}"></td>
                     <td th:text="${horario.horaInicio}"></td>
                     <td th:text="${horario.horaFin}"></td>
-                    <td th:text="${horario.precio}"></td>
+                    <td th:text="'₡'+ ${horario.precio}"></td>
                     <td>
                         <!-- Verificar si pacienteID está vacío -->
                         <form th:if="${#strings.isEmpty(horario.pacienteID)}" method="post" action="/paciente/reservar">
@@ -108,7 +109,7 @@
             <div class="popup-buttons">
                 <form action="/paciente/confirmar" method="post">
                     <input type="hidden" name="horarioID" th:value="${horario.id}">
-                    <button type="submit" class="popup-btn confirm-btn">Confirmar Cita</button>
+                    <button type="submit" class="popup-btn confirm-btn">Confirmar</button>
                 </form>
                 <form action="/paciente/cancelar" method="post">
                     <input type="hidden" name="horarioID" th:value="${horario.id}">
