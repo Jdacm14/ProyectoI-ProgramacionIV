@@ -2,8 +2,6 @@ package com.example.proyectoiprogramacioniv.models;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class MedicoModel {
@@ -30,7 +28,6 @@ public class MedicoModel {
 
     }
 
-
     // getters
     public String getIdentificacion() {return identificacion;}
     public String getNombre() {return nombre;}
@@ -39,7 +36,6 @@ public class MedicoModel {
     public String getEspecialidad() {return especialidad;}
     public String getUbicacion() {return ubicacion;}
     public String getPresentacion() {return presentacion;}
-
 
     // setters
     public void setNombre(String nombre) {this.nombre = nombre;}

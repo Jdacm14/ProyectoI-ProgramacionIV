@@ -32,8 +32,6 @@
         <button type="submit">Buscar</button>
     </form>
 
-
-
     <!-- Mostrar resultados de búsqueda -->
     <div th:if="${not #lists.isEmpty(medicos)}" class="listaMedicos">
         <h1>Lista de Médicos y Horarios Disponibles</h1>
@@ -64,7 +62,7 @@
                         <!-- Verificar si pacienteID está vacío -->
                         <form th:if="${#strings.isEmpty(horario.pacienteID)}" method="post" action="/paciente/reservar">
                             <input type="hidden" name="horarioID" th:value="${horario.id}">
-                            <button type="submit">Reservar</button>
+                            <button type="submit" href= "#popup">Reservar</button>
                         </form>
                         <span th:if="${!#strings.isEmpty(horario.pacienteID)}" class="reservado">Reservado</span>
                     </td>
@@ -75,6 +73,51 @@
         <p th:if="${#lists.isEmpty(medicos)}">No se encontraron médicos con los criterios seleccionados.</p>
 
     </div>
+
+    <div th:if="${mostrarPopup}" class="popup-container active">
+        <div class="popup-card">
+            <h2 class="popup-header">Confirmar Cita</h2>
+            <div class="popup-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Médico</th>
+                        <th>Especialidad</th>
+                        <th>Fecha</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:text="'Lic. ' + ${medico.nombre}"></td>
+                        <td th:text="${medico.especialidad}"></td>
+                        <td th:text="${horario.fecha}"></td>
+                    </tr>
+                    <tr>
+                        <th>Hora Inicio</th>
+                        <th>Hora Fin</th>
+                        <th>Ubicación</th>
+                    </tr>
+                    <tr>
+                        <td th:text="${horario.horaInicio}"></td>
+                        <td th:text="${horario.horaFin}"></td>
+                        <td th:text="${medico.ubicacion}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="popup-buttons">
+                <form action="/paciente/confirmar" method="post">
+                    <input type="hidden" name="horarioID" th:value="${horario.id}">
+                    <button type="submit" class="popup-btn confirm-btn">Confirmar Cita</button>
+                </form>
+                <form action="/paciente/cancelar" method="post">
+                    <input type="hidden" name="horarioID" th:value="${horario.id}">
+                    <button type="submit" class="popup-btn cancel-btn">Cancelar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 <div th:replace="~{layouts/footer}"></div>
 
