@@ -108,7 +108,9 @@ public class PacienteController {
     @GetMapping("/pacientes/buscar")
     public String buscarCita(@RequestParam(value = "especialidad", required = false) String especialidad,
                              @RequestParam(value = "ubicacion", required = false) String ubicacion,
-                             Model model) {
+                             Model model, HttpSession session) {
+
+        PacienteModel paciente = (PacienteModel) session.getAttribute("paciente");
 
         // Obtener los medicos de la base de datos
         List<MedicoModel> medicos = medicoRepository.findAll();
@@ -157,6 +159,7 @@ public class PacienteController {
         }
 
         // Agrega atributos al modelo para pasar la vista
+        model.addAttribute("paciente", paciente);
         model.addAttribute("medicos", medicosFiltrados);
         model.addAttribute("horarios", horarios);
         model.addAttribute("especialidades", medicoRepository.findDistinctEspecialidades());
@@ -239,7 +242,7 @@ public class PacienteController {
 
             // Redirigir al listado de citas del paciente (ruta que programarás en el futuro)
             session.setAttribute("tipo", "paciente");
-            return "redirect:/pacientes/PacienteCitas";
+            return "redirect:/pacientes/PacienteHistoricoCitas";
         } else {
             // En caso de que el horario no exista, se regresa a la vista de búsqueda con error
             model.addAttribute("error", "Horario no disponible.");
@@ -259,29 +262,48 @@ public class PacienteController {
         return "redirect:/pacientes/buscar";
     }
 
-    @GetMapping("/pacientes/PacienteCitas")
-    public String listarCitasPaciente(HttpSession session, Model model) {
-        // Verificar si hay sesión activa de paciente
-        if (session.getAttribute("tipo") == null || !session.getAttribute("tipo").equals("paciente")) {
-            return "redirect:/pacientes/login"; // Redirige si no hay sesión
-        }
-
-        // Obtener el paciente desde la sesión
+    @GetMapping("/pacientes/PacienteHistoricoCitas")
+    public String listarCitasPaciente(@RequestParam(value = "estado", required = false) String estado,
+                                      @RequestParam(value = "medico", required = false) String medico,
+                                      HttpSession session, Model model) {
         PacienteModel paciente = (PacienteModel) session.getAttribute("paciente");
-
         if (paciente == null) {
-            return "redirect:/pacientes/login"; // Si no hay paciente en la sesión, redirige al login
+            return "redirect:/pacientes/login";
         }
 
-        // Obtener las citas del paciente
-        List<HorarioModel> citas = horarioRepository.findByPacienteID(paciente.getIdentificacion());
+        List<HorarioModel> citasPaciente = horarioRepository.findByPacienteID(paciente.getIdentificacion());
+        Map<String, MedicoModel> medicosMap = new HashMap<>();
 
-        // Agregar el paciente al modelo para pasar la información a la vista
-        model.addAttribute("paciente", paciente);  // Aquí agregamos el paciente al modelo
-        model.addAttribute("citas", citas);
+        // Filtrar citas por estado si es necesario
+        if (estado != null && !estado.equals("todas")) {
+            citasPaciente.removeIf(cita -> !cita.getEstado().equalsIgnoreCase(estado));
+        }
 
-        // Redirigir a la vista donde se mostrarán las citas del paciente
-        return "pacientes/PacienteCitas";
+        // Filtrar citas por médico si es necesario
+        if (medico != null && !medico.isEmpty()) {
+            citasPaciente.removeIf(cita -> {
+                Optional<MedicoModel> medicoOpt = medicoRepository.findByIdentificacion(cita.getMedicoID());
+                return medicoOpt.isEmpty() || !medicoOpt.get().getNombre().toLowerCase().contains(medico.toLowerCase());
+            });
+        }
+
+        // Para cada cita, se busca el médico y se guarda en el mapa usando el ID como clave
+        for (HorarioModel horario : citasPaciente) {
+            Optional<MedicoModel> medicoOpt = medicoRepository.findByIdentificacion(horario.getMedicoID());
+            medicoOpt.ifPresent(value -> medicosMap.put(horario.getMedicoID(), value));
+        }
+
+        citasPaciente.sort(Comparator.comparing(HorarioModel::getFecha)
+                .thenComparing(HorarioModel::getHoraInicio));
+
+        model.addAttribute("medicosMap", medicosMap);
+        model.addAttribute("paciente", paciente);
+        model.addAttribute("horarios", citasPaciente);
+        return "pacientes/PacienteHistoricoCitas";
     }
+
+
+
+
 
 }

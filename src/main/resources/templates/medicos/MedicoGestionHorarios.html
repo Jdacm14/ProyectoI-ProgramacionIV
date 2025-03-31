@@ -16,6 +16,7 @@
 </section>
 
 <main class="contenedorCitas">
+    <h1 th:text="'Lic.  ' + ${nombre} + ' - Gestión de Citas'" class="titulo"></h1>
     <section class="tablaCitas">
         <p><span style="color: #2d6a4f; font-weight: bold">Crear un nuevo horario</span></p>
 
@@ -60,9 +61,6 @@
                 </tbody>
             </table>
         </form>
-    </section>
-
-    <section class="tablaCitas">
         <p><span style="color: #2d6a4f; font-weight: bold">Lista de Horarios</span></p>
         <table>
             <thead>
@@ -87,7 +85,7 @@
                 <td th:text="${horario.getFecha()}"></td>
                 <td th:text="${horario.getHoraInicio()}"></td>
                 <td th:text="${horario.getHoraFin()}"></td>
-                <td th:text="${horario.getPrecio()}"></td>
+                <td th:text="'₡' + ${horario.getPrecio()}"></td>
                 <td>
                     <form th:action="@{/medicos/MedicoGestionHorarios/Eliminar}" method="post">
                         <input type="hidden" name="idHorario" th:value="${horario.getId()}">

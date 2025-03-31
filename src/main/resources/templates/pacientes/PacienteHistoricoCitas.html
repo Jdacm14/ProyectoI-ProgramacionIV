@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico de Citas</title>
+    <link rel="stylesheet" th:href="@{/css/historicoCitasStyle.css}">
+</head>
+<body>
+<div th:replace="~{layouts/header}"></div>
+
+<main class="contenedorCitas">
+    <h1 class="titulo">Histórico de Citas - <span th:text="${paciente.nombre}"></span></h1>
+    <form method="get" action="/pacientes/PacienteHistoricoCitas" class="form-busqueda">
+        <section class="filtros">
+            <label for="filtroEstado" class="etiquetaFormulario">Filtrar por estado:</label>
+            <select class="entradaFormulario" id="filtroEstado" name="estado">
+                <option value="todas">Todas</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="completada">Completada</option>
+                <option value="cancelada">Cancelada</option>
+            </select>
+
+            <label for="filtroMedico" class="etiquetaFormulario">Filtrar por médico:</label>
+            <input type="text" id="filtroMedico" class="entradaFormulario" name="medico" placeholder="Ingrese nombre del médico">
+
+            <button type="submit">Buscar</button>
+        </section>
+    </form>
+
+    <!-- Tabla de Citas -->
+    <section class="tablaCitas">
+        <table>
+            <thead>
+            <tr>
+                <th>Médico</th>
+                <th>Especialidad</th>
+                <th>Ubicación</th>
+                <th>Fecha</th>
+                <th>Hora Inicio</th>
+                <th>Costo</th>
+                <th>Estado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="horario : ${horarios}">
+                <!-- Buscar el médico en el mapa por el ID -->
+                <td th:text="${medicosMap[horario.medicoID] != null ? medicosMap[horario.medicoID].nombre : 'No encontrado'}"></td>
+                <td th:text="${medicosMap[horario.medicoID] != null ? medicosMap[horario.medicoID].especialidad : 'No encontrado'}"></td>
+                <td th:text="${medicosMap[horario.medicoID] != null ? medicosMap[horario.medicoID].ubicacion : 'No encontrado'}"></td>
+                <td th:text="${horario.fecha}"></td>
+                <td th:text="${horario.horaInicio}"></td>
+                <td th:text="'₡' + ${horario.precio}"></td>
+                <td>
+                    <span th:text="${horario.estado}" th:classappend="${horario.estado}"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+
+<div th:replace="~{layouts/footer}"></div>
+
+</body>
+</html>
+
