@@ -2,10 +2,13 @@ package com.example.proyectoiprogramacioniv.controllers;
 
 import com.example.proyectoiprogramacioniv.models.HorarioModel;
 import com.example.proyectoiprogramacioniv.models.MedicoModel;
+import com.example.proyectoiprogramacioniv.models.PacienteModel;
 import com.example.proyectoiprogramacioniv.repositories.HorarioRepository;
 import com.example.proyectoiprogramacioniv.repositories.MedicoRepository;
+import com.example.proyectoiprogramacioniv.repositories.PacienteRepository;
 import com.example.proyectoiprogramacioniv.services.HorarioService;
 import com.example.proyectoiprogramacioniv.services.MedicoService;
+import com.example.proyectoiprogramacioniv.services.PacienteService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +37,9 @@ public class MedicoController {
 
     @Autowired
     private HorarioRepository horarioRepository;
+
+    @Autowired
+    private PacienteRepository pacienteRepository;
 
     //---------------------------  login ----------------------------------
 
@@ -78,7 +84,7 @@ public class MedicoController {
                 model.addAttribute("medico", medico);
                 session.setAttribute("tipo", "medico");
                 session.setAttribute("medico", medico); // Agrega esta línea
-                return "redirect:/medicos/MedicoPerfil";
+                return "/medicos/MedicoPerfil";
             }
 
 
@@ -181,41 +187,94 @@ public class MedicoController {
         return "redirect:/medicos/MedicoGestionCitas";
     }
 //------------------------------- Gestion Citas -----------------------------------------
-    @GetMapping("/medicos/MedicoGestionCitas")
-    public String MedicoGestionCitas(Model model, HttpSession session) {
-        MedicoModel medico = (MedicoModel) session.getAttribute("medico");
-        // Si no hay un médico en la sesión , redirige a login
-        if (medico == null) { return "redirect:/medicos/login"; }
 
+    @GetMapping("/medicos/MedicoGestionCitas")
+    public String MedicoGestionCitas(@RequestParam(value = "filtroEstado", required = false) String estado,
+                                     @RequestParam(value = "filtroPaciente", required = false) String pacienteNombre,
+                                     Model model, HttpSession session) {
+
+        MedicoModel medico = (MedicoModel) session.getAttribute("medico");
+
+        // Si el médico no está en sesión, redirigir al login
+        if (medico == null) {
+            return "redirect:/medicos/login";
+        }
+
+        // Obtener todas las citas del médico actual
+        List<HorarioModel> todasLasCitas = horarioRepository.findByMedicoID(medico.getIdentificacion());
+        List<HorarioModel> citasFiltradas = new ArrayList<>();
+
+        // Crear un mapa para almacenar el ID y el nombre del paciente
+        Map<String, String> nombresPacientes = new HashMap<>();
+
+        // Filtrar por estado y paciente (si se ingresaron)
+        for (HorarioModel cita : todasLasCitas) {
+            boolean coincideEstado = (estado == null || estado.equalsIgnoreCase("todas") ||
+                    (cita.getEstado() != null && cita.getEstado().equalsIgnoreCase(estado)));
+
+            //pacienteNombre proviene del html, nombrePaciente proviene del id de Horario
+            String nombrePaciente = "No asignado";
+            if (cita.getPacienteID() != null) {
+                PacienteModel paciente = pacienteRepository.findById(cita.getPacienteID()).orElse(null);
+                if (paciente != null) {
+                    nombrePaciente = paciente.getNombre();
+                }
+            }
+
+            boolean coincidePaciente = (pacienteNombre == null || pacienteNombre.isEmpty() ||
+                    pacienteNombre.equalsIgnoreCase("Ingrese nombre del paciente") ||
+                    nombrePaciente.toLowerCase().contains(pacienteNombre.toLowerCase()));
+
+            if (coincideEstado && coincidePaciente) {
+                citasFiltradas.add(cita);
+
+                // Buscar el nombre del paciente si aún no lo hemos obtenido
+                if (cita.getPacienteID() != null && !nombresPacientes.containsKey(cita.getPacienteID())) {
+                    PacienteModel paciente = pacienteRepository.findById(cita.getPacienteID()).orElse(null);
+                    if (paciente != null) {
+                        nombresPacientes.put(cita.getPacienteID(), paciente.getNombre());
+                    }
+                }
+            }
+        }
+
+        // Ordenar citas por fecha y hora
+        citasFiltradas.sort(Comparator.comparing(HorarioModel::getFecha)
+                .thenComparing(HorarioModel::getHoraInicio));
+
+        // Pasar datos a la vista
         model.addAttribute("nombre", medico.getNombre());
+        model.addAttribute("citas", citasFiltradas);
+        model.addAttribute("nombresPacientes", nombresPacientes);
+
         return "medicos/MedicoGestionCitas";
     }
 
+    @PostMapping("/medicos/actualizarCita")
+    public String ActualizarCita (@RequestParam("citaIdCambiar") String idCita,
+                                  @RequestParam("estadoCita") String estadoCita,
+                                  Model model, HttpSession session ){
+
+        horarioService.actualizarEstado(idCita, estadoCita);
+
+        return "redirect:/medicos/MedicoGestionCitas";
+
+    }
 
     @GetMapping("/medicos/MedicoGestionHorarios")
     public String MedicoGestionHorarios(Model model, HttpSession session) {
         MedicoModel medico = (MedicoModel) session.getAttribute("medico");
 
-        if (medico == null) {
-            return "redirect:/medicos/login";
-        }
+        if (medico == null) { return "redirect:/medicos/login"; }
 
         model.addAttribute("medico", medico);
         model.addAttribute("nombre", medico.getNombre());
 
-        // Obtener los horarios del médico
         List<HorarioModel> horarios = horarioService.buscarPorMedico(medico.getIdentificacion());
-
-        // Ordenar la lista por fecha y luego por hora de inicio
-        horarios.sort(Comparator.comparing(HorarioModel::getFecha)
-                .thenComparing(HorarioModel::getHoraInicio));
-
-        // Agregar los horarios ordenados al modelo
         model.addAttribute("horarios", horarios);
 
         return "medicos/MedicoGestionHorarios";
     }
-
 
     @PostMapping("/medicos/MedicoGestionHorarios")
     public String crearHorarios(@RequestParam("fechaSeleccionada") String fecha,

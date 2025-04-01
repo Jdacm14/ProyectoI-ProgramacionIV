@@ -95,4 +95,15 @@ public class HorarioService {
 
         return horariosDisponibles;
     }
+
+    public void actualizarEstado (String horarioId, String estado){
+
+        Optional<HorarioModel> horarioOptional = horarioRepository.findById(horarioId);
+
+        horarioOptional.ifPresent(horario -> {
+            horario.setEstado(estado);
+            horarioRepository.save(horario);
+        });
+
+    }
 }
