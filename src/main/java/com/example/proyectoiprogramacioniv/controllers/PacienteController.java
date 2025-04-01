@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -167,9 +168,11 @@ public class PacienteController {
         return "pacientes/PacienteBuscarCita";
     }
 
-    @PostMapping("/paciente/reservar")
-    public String reservarCita(@RequestParam("horarioID") String horarioID, HttpSession session, Model model) {
+    @PostMapping("/pacientes/reservar")
+    public String reservarCita(@RequestParam("horarioID") String horarioID,
+                               HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         if (session.getAttribute("tipo") == null || !session.getAttribute("tipo").equals("paciente")) {
+            redirectAttributes.addFlashAttribute("error", "Por favor inicie sesión antes de continuar");
             return "redirect:/pacientes/login";
         }
 
@@ -220,12 +223,12 @@ public class PacienteController {
         }
     }
 
-
-
-    @PostMapping("/paciente/confirmar")
-    public String confirmarCita(@RequestParam("horarioID") String horarioID, HttpSession session, Model model) {
+    @PostMapping("/pacientes/confirmar")
+    public String confirmarCita(@RequestParam("horarioID") String horarioID,
+                                HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         // Verificar si hay sesión activa de paciente
         if (session.getAttribute("tipo") == null || !session.getAttribute("tipo").equals("paciente")) {
+            redirectAttributes.addFlashAttribute("error", "Por favor inicie sesión antes de continuar");
             return "redirect:/pacientes/login";
         }
 
@@ -250,10 +253,12 @@ public class PacienteController {
         }
     }
 
-    @PostMapping("/paciente/cancelar")
-    public String cancelarCita(@RequestParam("horarioID") String horarioID, HttpSession session, Model model) {
+    @PostMapping("/pacientes/cancelar")
+    public String cancelarCita(@RequestParam("horarioID") String horarioID,
+                               HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         // Verificar si hay sesión activa de paciente
         if (session.getAttribute("tipo") == null || !session.getAttribute("tipo").equals("paciente")) {
+            redirectAttributes.addFlashAttribute("error", "Por favor inicie sesión antes de continuar");
             return "redirect:/pacientes/login";
         }
 
@@ -265,9 +270,10 @@ public class PacienteController {
     @GetMapping("/pacientes/PacienteHistoricoCitas")
     public String listarCitasPaciente(@RequestParam(value = "estado", required = false) String estado,
                                       @RequestParam(value = "medico", required = false) String medico,
-                                      HttpSession session, Model model) {
+                                      HttpSession session, Model model, RedirectAttributes redirectAttributes) {
         PacienteModel paciente = (PacienteModel) session.getAttribute("paciente");
         if (paciente == null) {
+            redirectAttributes.addFlashAttribute("error", "Por favor inicie sesión antes de continuar");
             return "redirect:/pacientes/login";
         }
 
@@ -302,8 +308,206 @@ public class PacienteController {
         return "pacientes/PacienteHistoricoCitas";
     }
 
+    @GetMapping("pacientes/pacienteHorarioExtendido")
+    public String mostrarHorarioExtendido(@RequestParam("medicoID") String medicoID,
+                                          @RequestParam(value = "fecha", required = false) String fechaStr,
+                                          Model model, HttpSession session, RedirectAttributes redirectAttributes) {
+        // Verificar sesión de paciente
+        if (session.getAttribute("tipo") == null || !session.getAttribute("tipo").equals("paciente")) {
+            redirectAttributes.addFlashAttribute("error", "Por favor inicie sesión antes de continuar");
+            return "redirect:/pacientes/login";
+        }
 
+        // Obtener el médico
+        Optional<MedicoModel> medicoOpt = medicoRepository.findByIdentificacion(medicoID);
+        if (!medicoOpt.isPresent()) {
+            model.addAttribute("error", "Médico no encontrado.");
+            return "redirect:/pacientes/buscar";
+        }
+        MedicoModel medico = medicoOpt.get();
 
+        // Obtener todos los horarios para ese médico (sin streams)
+        List<HorarioModel> horariosMedico = new ArrayList<>();
+        List<HorarioModel> todosHorarios = horarioRepository.findAll();
+        for (HorarioModel h : todosHorarios) {
+            if (h.getMedicoID().equals(medicoID)) {
+                horariosMedico.add(h);
+            }
+        }
 
+        // Extraer las fechas únicas de los horarios (se incluyen todas, sin filtrar las anteriores a hoy)
+        List<LocalDate> fechasDisponibles = new ArrayList<>();
+        for (HorarioModel h : horariosMedico) {
+            LocalDate fechaHorario = LocalDate.parse(h.getFecha());
+            if (!fechasDisponibles.contains(fechaHorario)) {
+                fechasDisponibles.add(fechaHorario);
+            }
+        }
 
+        // Ordenar la lista de fechas (orden ascendente)
+        Collections.sort(fechasDisponibles);
+
+        // Si no hay fechas disponibles, redirigir o mostrar mensaje de error
+        if (fechasDisponibles.isEmpty()) {
+            model.addAttribute("mensaje", "No hay horarios disponibles para este médico.");
+            return "pacientes/PacienteHorarioExtendido";
+        }
+
+        LocalDate hoy = LocalDate.now();
+        LocalDate fechaActual = null;
+
+        // Determinar la fecha a mostrar
+        if (fechaStr == null || fechaStr.isEmpty()) {
+            // Buscar la fecha más próxima que sea hoy o posterior
+            for (LocalDate f : fechasDisponibles) {
+                if (!f.isBefore(hoy)) {  // f >= hoy
+                    fechaActual = f;
+                    break;
+                }
+            }
+            // Si todas las fechas son anteriores a hoy, tomar la última (la más reciente del pasado)
+            if (fechaActual == null) {
+                fechaActual = fechasDisponibles.get(fechasDisponibles.size() - 1);
+            }
+        } else {
+            fechaActual = LocalDate.parse(fechaStr);
+            // Validar que la fecha actual esté en la lista; de lo contrario, asignar la fecha más próxima >= hoy
+            if (!fechasDisponibles.contains(fechaActual)) {
+                fechaActual = null;
+                for (LocalDate f : fechasDisponibles) {
+                    if (!f.isBefore(hoy)) {
+                        fechaActual = f;
+                        break;
+                    }
+                }
+                if (fechaActual == null) {
+                    fechaActual = fechasDisponibles.get(fechasDisponibles.size() - 1);
+                }
+            }
+        }
+
+        // Filtrar horarios para la fecha actual sin usar streams
+        List<HorarioModel> horariosDelDia = new ArrayList<>();
+        for (HorarioModel h : horariosMedico) {
+            LocalDate fechaHorario = LocalDate.parse(h.getFecha());
+            if (fechaHorario.equals(fechaActual)) {
+                horariosDelDia.add(h);
+            }
+        }
+
+        // Determinar la posición actual en la lista de fechas disponibles
+        int indiceActual = fechasDisponibles.indexOf(fechaActual);
+
+        // Calcular fecha anterior y siguiente (si existen)
+        LocalDate fechaAnterior = (indiceActual > 0) ? fechasDisponibles.get(indiceActual - 1) : null;
+        LocalDate fechaSiguiente = (indiceActual < fechasDisponibles.size() - 1) ? fechasDisponibles.get(indiceActual + 1) : null;
+
+        // Agregar datos al modelo
+        model.addAttribute("medico", medico);
+        model.addAttribute("horarios", horariosDelDia);
+        model.addAttribute("fechaActual", fechaActual);
+        model.addAttribute("fechaAnterior", fechaAnterior);
+        model.addAttribute("fechaSiguiente", fechaSiguiente);
+
+        return "pacientes/PacienteHorarioExtendido";
+    }
+
+    @PostMapping("/pacientes/horarioExtendido/reservar")
+    public String horarioExtendidoReservarCita(@RequestParam("horarioID") String horarioID,
+                                               HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+        if (session.getAttribute("tipo") == null || !session.getAttribute("tipo").equals("paciente")) {
+            redirectAttributes.addFlashAttribute("error", "Por favor inicie sesión antes de continuar");
+            return "redirect:/pacientes/login";
+        }
+
+        Optional<HorarioModel> horario = horarioRepository.findById(horarioID);
+        if (horario.isPresent()) {
+            PacienteModel paciente = (PacienteModel) session.getAttribute("paciente");
+            String medicoId = horario.get().getMedicoID();
+            Optional<MedicoModel> medico = medicoRepository.findByIdentificacion(medicoId);
+            if (medico.isPresent()) {
+                model.addAttribute("medico", medico.get());
+            } else {
+                model.addAttribute("error", "Médico no encontrado.");
+                return "pacientes/PacienteBuscarCita";
+            }
+            model.addAttribute("horario", horario.get());
+            model.addAttribute("paciente", paciente);
+            model.addAttribute("mostrarPopup", true);  // Bandera para activar el pop-up
+
+            // Se recargan los datos de búsqueda para mantener la vista con toda la información
+            List<MedicoModel> medicos = medicoRepository.findAll();
+            List<MedicoModel> medicosFiltrados = new ArrayList<>();
+            LocalDate currentDate = LocalDate.now();
+            LocalDate fechaLimite = currentDate.plusDays(3);
+            List<HorarioModel> allHorarios = horarioRepository.findAll();
+            List<HorarioModel> horarios = new ArrayList<>();
+            for (HorarioModel h : allHorarios) {
+                LocalDate fechaHorario = LocalDate.parse(h.getFecha());
+                if (!fechaHorario.isBefore(currentDate) && !fechaHorario.isAfter(fechaLimite)) {
+                    horarios.add(h);
+                }
+            }
+            horarios.sort(Comparator.comparing(HorarioModel::getFecha)
+                    .thenComparing(HorarioModel::getHoraInicio));
+            for (MedicoModel m : medicos) {
+                boolean tieneHorarios = horarios.stream().anyMatch(h -> h.getMedicoID().equals(m.getIdentificacion()));
+                if (tieneHorarios) {
+                    medicosFiltrados.add(m);
+                }
+            }
+            model.addAttribute("medicos", medicosFiltrados);
+            model.addAttribute("horarios", horarios);
+            model.addAttribute("especialidades", medicoRepository.findDistinctEspecialidades());
+
+            // Ahora retornamos la vista extendida para que se muestre el popup en ella
+            return "pacientes/PacienteHorarioExtendido";
+        } else {
+            model.addAttribute("error", "Horario no disponible.");
+            return "pacientes/PacienteBuscarCita";
+        }
+    }
+
+    @PostMapping("/pacientes/horarioExtendido/confirmar")
+    public String horarioExtendidoConfirmarCita(@RequestParam("horarioID") String horarioID,
+                                                HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+        // Verificar si hay sesión activa de paciente
+        if (session.getAttribute("tipo") == null || !session.getAttribute("tipo").equals("paciente")) {
+            redirectAttributes.addFlashAttribute("error", "Por favor inicie sesión antes de continuar");
+            return "redirect:/pacientes/login";
+        }
+
+        // Obtener el horario a reservar
+        Optional<HorarioModel> horarioOpt = horarioRepository.findById(horarioID);
+        if (horarioOpt.isPresent()) {
+            HorarioModel horario = horarioOpt.get();
+            PacienteModel paciente = (PacienteModel) session.getAttribute("paciente");
+
+            // Asignar el paciente al horario y guardar en la base de datos
+            horario.setPacienteID(paciente.getIdentificacion());
+            horario.setEstado("Pendiente");
+            horarioRepository.save(horario);
+
+            // Redirigir al listado de citas del paciente (ruta que programarás en el futuro)
+            session.setAttribute("tipo", "paciente");
+            return "redirect:/pacientes/PacienteHistoricoCitas";
+        } else {
+            // En caso de que el horario no exista, se regresa a la vista de búsqueda con error
+            model.addAttribute("error", "Horario no disponible.");
+            return "pacientes/PacienteHorarioExtendido";
+        }
+    }
+
+    @PostMapping("/pacientes/horarioExtendido/cancelar")
+    public String horarioExtendidoCancelarCita(@RequestParam("horarioID") String horarioID,
+                                               HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+        // Verificar si hay sesión activa de paciente
+        if (session.getAttribute("tipo") == null || !session.getAttribute("tipo").equals("paciente")) {
+            redirectAttributes.addFlashAttribute("error", "Por favor inicie sesión antes de continuar");
+            return "redirect:/pacientes/login";
+        }
+        // Al cancelar en el pop-up, simplemente se retorna a la vista de búsqueda de citas,
+        // sin guardar ningún cambio y sin activar el pop-up (por lo que desaparece).
+        return "redirect:/pacientes/pacienteHorarioExtendido";
+    }
 }

@@ -1,70 +1,113 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Citas</title>
-    <link rel="stylesheet" th:href="@{/css/horarioExtendidoStyle.css}">
+    <title>Horario Extendido</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/horarioExtendidoStyle.css}">
 </head>
 <body>
+
 <div th:replace="~{layouts/header}"></div>
 
-    <h1 class="titulo">Dr. Juan Pérez - Gestión de Citas</h1>
-    
-    <main class="contenedorCitas">
-        <section class="filtros">
-            <!-- Filtro por estado con icono -->
-            <div class="select-con-icono">
-                <label for="filtroEstado" class="etiquetaFormulario">Filtrar por estado:</label>
-                <select class="entradaFormulario" id="filtroEstado">
-                    <option value="todas">Todas</option>
-                    <option value="pendiente">Pendiente</option>
-                    <option value="completada">Completada</option>
-                </select>
-               
-            </div>
+<div class="card-medico">
+    <h2 th:text="${medico.nombre}"></h2>
+    <p><strong>Especialidad:</strong> <span th:text="${medico.especialidad}"></span></p>
+    <p><strong>Ubicación:</strong> <span th:text="${medico.ubicacion}"></span></p>
+</div>
 
-            <!-- Filtro por paciente con botón de búsqueda -->
-            <div class="input-con-icono">
-                <label for="filtroPaciente" class="etiquetaFormulario">Filtrar por paciente:</label>
-                <input type="text" id="filtroPaciente" class="entradaFormulario" placeholder="Ingrese nombre del paciente">
+<div class="encabezado-horarios">
+    <h3 th:text="'Horarios disponibles para el día ' + ${fechaActual}"></h3>
 
+    <div class="navegacion-fechas">
+        <a th:if="${fechaAnterior != null}"
+           th:href="@{pacienteHorarioExtendido(medicoID=${medico.identificacion}, fecha=${fechaAnterior})}"
+           class="btn-navegacion">Anterior</a>
+        <button th:if="${fechaAnterior == null}" class="btn-navegacion" disabled>Anterior</button>
+
+        <a th:if="${fechaSiguiente != null}"
+           th:href="@{pacienteHorarioExtendido(medicoID=${medico.identificacion}, fecha=${fechaSiguiente})}"
+           class="btn-navegacion">Siguiente</a>
+        <button th:if="${fechaSiguiente == null}" class="btn-navegacion" disabled>Siguiente</button>
+    </div>
+</div>
+
+<div>
+    <a class="buscarCita" th:href="@{/pacientes/buscar}">Volver a Buscar Citas</a>
+</div>
+
+<table>
+    <tr>
+        <th>Fecha</th>
+        <th>Hora Inicio</th>
+        <th>Hora Fin</th>
+        <th>Precio</th>
+        <th>Acción</th>
+    </tr>
+    <tr th:each="horario : ${horarios}">
+        <td th:text="${horario.fecha}"></td>
+        <td th:text="${horario.horaInicio}"></td>
+        <td th:text="${horario.horaFin}"></td>
+        <td th:text="'₡'+ ${horario.precio}"></td>
+        <td>
+            <div th:if="${T(java.time.LocalDate).parse(horario.fecha).isBefore(T(java.time.LocalDate).now())}">
+                <span class="vencida">Vencida</span>
             </div>
-        </section>
-        
-        <section class="tablaCitas">
+            <!-- Si la fecha es hoy o futura, se permite reservar -->
+            <div th:if="${!T(java.time.LocalDate).parse(horario.fecha).isBefore(T(java.time.LocalDate).now()) }">
+                <form th:if="${#strings.isEmpty(horario.pacienteID)}" method="post" action="/pacientes/horarioExtendido/reservar">
+                    <input type="hidden" name="horarioID" th:value="${horario.id}">
+                    <button type="submit" href= "#popup">Reservar</button>
+                </form>
+                <span th:if="${!#strings.isEmpty(horario.pacienteID)}" class="reservada">Reservado</span>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div th:if="${mostrarPopup}" class="popup-container active">
+    <div class="popup-card">
+        <h2 class="popup-header">Confirmar Cita</h2>
+        <div class="popup-content">
             <table>
                 <thead>
-                    <tr>
-                        <th>Paciente</th>
-                        <th>Fecha</th>
-                        <th>Hora</th>
-                        <th>Estado</th>
-                        <th>Anotaciones</th>
-                        <th>Acciones</th>
-                    </tr>
+                <tr>
+                    <th>Médico</th>
+                    <th>Especialidad</th>
+                    <th>Fecha</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Ana Gómez</td>
-                        <td>2025-03-12</td>
-                        <td>09:00 AM</td>
-                        <td><span class="estado pendiente">Pendiente</span></td>
-                        <td><textarea class="entradaFormulario"></textarea></td>
-                        <td><button class="botonEnviar">Completar</button></td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Pérez</td>
-                        <td>2025-03-11</td>
-                        <td>11:30 AM</td>
-                        <td><span class="estado completada">Completada</span></td>
-                        <td><textarea class="entradaFormulario" disabled>Consulta realizada con éxito</textarea></td>
-                        <td><button class="botonEnviar" disabled>Completada</button></td>
-                    </tr>
+                <tr>
+                    <td th:text="'Lic. ' + ${medico.nombre}"></td>
+                    <td th:text="${medico.especialidad}"></td>
+                    <td th:text="${horario.fecha}"></td>
+                </tr>
+                <tr>
+                    <th>Hora Inicio</th>
+                    <th>Hora Fin</th>
+                    <th>Ubicación</th>
+                </tr>
+                <tr>
+                    <td th:text="${horario.horaInicio}"></td>
+                    <td th:text="${horario.horaFin}"></td>
+                    <td th:text="${medico.ubicacion}"></td>
+                </tr>
                 </tbody>
             </table>
-        </section>
-    </main>
+        </div>
+        <div class="popup-buttons">
+            <form action="/pacientes/horarioExtendido/confirmar" method="post">
+                <input type="hidden" name="horarioID" th:value="${horario.id}">
+                <button type="submit" class="popup-btn confirm-btn">Confirmar</button>
+            </form>
+            <form action="/pacientes/horarioExtendido/cancelar" method="post">
+                <input type="hidden" name="horarioID" th:value="${horario.id}">
+                <button type="submit" class="popup-btn cancel-btn">Cancelar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div th:replace="~{layouts/footer}"></div>
 
 </body>
