@@ -17,18 +17,30 @@
 
     <main class="contenedorCitas">
         <h1 th:text="'Lic.  ' + ${nombre} + ' - Gestión de Citas'" class="titulo"></h1>
-        <section class="filtros">
+
+        <form action="/medicos/MedicoGestionCitas" method="get" class="form-busqueda">
+            <section class="filtros">
+
+           <div >
             <label for="filtroEstado" class="etiquetaFormulario">Filtrar por estado:</label>
-            <select class="entradaFormulario" id="filtroEstado">
-                <option value="todas">Todas</option>
-                <option value="pendiente">Pendiente</option>
-                <option value="completada">Completada</option>
-            </select>
-            
             <label for="filtroPaciente" class="etiquetaFormulario">Filtrar por paciente:</label>
-            <input type="text" id="filtroPaciente" class="entradaFormulario" placeholder="Ingrese nombre del paciente">
-        </section>
-        
+           </div>
+
+                <div class="fila-inputs">
+            <select class="entradaFormulario" id="filtroEstado" name="filtroEstado">
+                <option value="Todas">Todas</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Completada">Completada</option>
+                <option value="Cancelada">Cancelada</option>
+            </select>
+
+            <input type="text" id="filtroPaciente" name="filtroPaciente" class="entradaFormulario" placeholder="Ingrese nombre del paciente">
+
+           <button type="submit" class="filtrar">Buscar</button>
+                </div>
+           </section>
+        </form>
+
         <section class="tablaCitas">
             <table>
                 <thead>
@@ -36,28 +48,40 @@
                         <th>Paciente</th>
                         <th>Fecha</th>
                         <th>Hora</th>
+                        <th>Dia</th>
                         <th>Estado</th>
-                        <th>Anotaciones</th>
-                        <th>Acciones</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Ana Gómez</td>
-                        <td>2025-03-12</td>
-                        <td>09:00 AM</td>
-                        <td><span class="estado pendiente">Pendiente</span></td>
-                        <td><textarea class="entradaFormulario"></textarea></td>
-                        <td><button class="botonEnviar">Completar</button></td>
-                    </tr>
-                    <tr>
-                        <td>Carlos Pérez</td>
-                        <td>2025-03-11</td>
-                        <td>11:30 AM</td>
-                        <td><span class="estado completada">Completada</span></td>
-                        <td><textarea class="entradaFormulario" disabled>Consulta realizada con éxito</textarea></td>
-                        <td><button class="botonEnviar" disabled>Completada</button></td>
-                    </tr>
+                <tr th:each="cita : ${citas}">
+                    <td th:text="${nombresPacientes != null and nombresPacientes.get(cita.getPacienteID()) != null ? nombresPacientes.get(cita.getPacienteID()) : 'No asignado'}"></td>
+                    <td th:text="${cita.getFecha()}"></td>
+                    <td th:text="${cita.getHoraInicio()}"></td>
+                    <td th:text="${'MONDAY' == cita.getDiaSemana() ? 'Lunes' :
+              'TUESDAY' == cita.getDiaSemana() ? 'Martes' :
+              'WEDNESDAY' == cita.getDiaSemana() ? 'Miércoles' :
+              'THURSDAY' == cita.getDiaSemana() ? 'Jueves' :
+              'FRIDAY' == cita.getDiaSemana() ? 'Viernes' :
+              'SATURDAY' == cita.getDiaSemana() ? 'Sábado' :
+              'SUNDAY' == cita.getDiaSemana() ? 'Domingo' : ''}"></td>
+                    <td><span th:text="${cita.getEstado()}" ></span></td>
+                    <td>
+                        <form action="/medicos/actualizarCita" method="post">
+                            <input type="hidden" name="citaIdCambiar" th:value="${cita.getId()}">
+                            <input type="hidden" name="estadoCita" value="Completada">
+                            <button type="submit" class="botonCompletar">Completar</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/medicos/actualizarCita" method="post">
+                            <input type="hidden" name="citaIdCambiar" th:value="${cita.getId()}">
+                            <input type="hidden" name="estadoCita" value="Cancelada">
+                            <button type="submit" class="botonEliminar">Cancelar</button>
+                        </form>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </section>
