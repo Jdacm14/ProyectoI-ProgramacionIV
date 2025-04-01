@@ -147,12 +147,9 @@ button:hover {
     background-color: #2d6a4f;
 }
 
-.reservado {
-    padding: 8px 10px;
-    border-radius: 5px;
-    font-size: 14px;
-    background-color: #bbbbbb;
-    color: white;
+.reservada {
+    color: red;
+    font-weight: bold;
 }
 
 /* Botones de acción (si son necesarios) */
