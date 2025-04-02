@@ -28,6 +28,11 @@ public class IndexController {
         return "prelogin";
     }
 
+    @GetMapping("/about")
+    public String about() {
+        return "about"; // Asegúrate de que tienes un archivo about.html en templates
+    }
+
     @PostMapping("/prelogin")
     public String redirectToLogin(@RequestParam("tipo") String tipo) {
         switch (tipo) {

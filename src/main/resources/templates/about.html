@@ -6,12 +6,15 @@
     <title>Sobre Nosotros</title>
     <link rel="stylesheet" th:href="@{/css/aboutStyle.css}">
 </head>
+
+<div th:replace="~{layouts/header}"></div>
 <body>
 
     <main class="contenedor">
         <section class="seccion-intro">
             <h2>Sobre Nosotros</h2>
-            <p>En <strong>Hospital KAJORA</strong>, estamos comprometidos con brindar atención médica de calidad, con un equipo de profesionales altamente capacitados y tecnología de vanguardia.</p>
+            <p>En <strong>Hospital KAJORA</strong>, estamos comprometidos con brindar atención médica de calidad, con un equipo de profesionales altamente capacitados y tecnología de vanguardia.
+            Con nuestros 3 medicos fundadores</p>
         </section>
 
         <section class="seccion-mision-vision">
@@ -29,18 +32,21 @@
             <h2>Nuestro Equipo</h2>
             <div class="equipo">
                 <div class="medico">
-                   
+
                     <h4>Dr.Katherine Jara</h4>
+                    <img src="/img/Katherine.jpeg" alt="Dr. Katherine Jara">
                     <p>Cardióloga</p>
                 </div>
                 <div class="medico">
                   
                     <h4>Dr. Randy Nuñez</h4>
+                    <img src="/img/Randy.jpeg" alt="Dr. Randy Nuñez">
                     <p>Pediatra</p>
                 </div>
                 <div class="medico">
                     
                     <h4>Dr. Jose Carballo</h4>
+                    <img src="/img/Jose.jpeg" alt="Dr. Jose Carballo">
                     <p>Cirujano</p>
                 </div>
             </div>
@@ -50,4 +56,6 @@
 
 
 </body>
+
+<div th:replace="~{layouts/footer}"></div>
 </html>
