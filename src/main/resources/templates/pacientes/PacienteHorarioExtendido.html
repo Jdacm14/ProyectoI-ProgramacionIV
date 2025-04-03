@@ -10,10 +10,16 @@
 <div th:replace="~{layouts/header}"></div>
 
 <div class="card-medico">
-    <h2 th:text="${medico.nombre}"></h2>
-    <p><strong>Especialidad:</strong> <span th:text="${medico.especialidad}"></span></p>
-    <p><strong>Ubicación:</strong> <span th:text="${medico.ubicacion}"></span></p>
+    <div class="perfil-container">
+        <img src="/img/doctorProfile.png" alt="FotoMedico" class="imagenPerfil">
+        <div class="textoPerfil">
+            <h2 th:text="${medico.nombre}"></h2>
+            <p><strong>Especialidad:</strong> <span th:text="${medico.especialidad}"></span></p>
+            <p><strong>Ubicación:</strong> <span th:text="${medico.ubicacion}"></span></p>
+        </div>
+    </div>
 </div>
+
 
 <div class="encabezado-horarios">
     <h3 th:text="'Horarios disponibles para el día ' + ${fechaActual}"></h3>
@@ -78,7 +84,7 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="'Lic. ' + ${medico.nombre}"></td>
+                    <td th:text="'Dr. ' + ${medico.nombre}"></td>
                     <td th:text="${medico.especialidad}"></td>
                     <td th:text="${horario.fecha}"></td>
                 </tr>

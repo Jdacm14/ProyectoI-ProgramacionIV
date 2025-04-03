@@ -57,7 +57,8 @@ public class AdministradorController {
         }
     }
 
-    @GetMapping("/administrador/ListadoMedico") // Ruta completa: "/administrador/AdminListadoMedicos"
+    // Muestra la vista del listado de medicos a aprobar por el administrador
+    @GetMapping("/administrador/ListadoMedico")
     public String listarMedicos(Model model) {
         List<MedicoModel> medicos = medicoService.obtenerTodosLosMedicos();
         model.addAttribute("medicos", medicos);
@@ -65,6 +66,7 @@ public class AdministradorController {
         return "administrador/ListadoMedico"; // Debe coincidir con el nombre del HTML en templates
     }
 
+    // Maneja las aprobaciones de los médics¿os
     @PostMapping("/administrador/cambiarEstadoMedico")
     public String cambiarEstadoMedico(@RequestParam("idMedico") Long id) {
         medicoService.cambiarEstadoMedico(id);

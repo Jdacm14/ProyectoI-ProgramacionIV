@@ -55,14 +55,14 @@ public class PacienteController {
                 // Guardar en la sesión
                 session.setAttribute("paciente", pacienteModel.get());
                 session.setAttribute("tipo", "paciente");
-                return "redirect:/pacientes/buscar"; // Redirige a la página de buscar cita
+                return "redirect:/pacientes/buscar";
             } else {
                 model.addAttribute("error", "Contraseña incorrecta");
-                return "pacientes/login"; // Redirige al login con el mensaje de error
+                return "pacientes/login";
             }
         } else {
             model.addAttribute("error", "Identificación incorrecta");
-            return "pacientes/login"; // Redirige al login con el mensaje de error
+            return "pacientes/login";
         }
     }
 
@@ -70,7 +70,7 @@ public class PacienteController {
     // Registro de paciente
     @GetMapping("pacientes/registro")
     public String registro() {
-        return "pacientes/registro";  // Muestra la vista de registro
+        return "pacientes/registro";
     }
 
     @PostMapping("pacientes/registro")
@@ -82,27 +82,26 @@ public class PacienteController {
         // Verifica si las contraseñas coinciden
         if (!contrasenna.equals(confirmarContrasenna)) {
             model.addAttribute("error", "Las contraseñas no coinciden");
-            return "pacientes/registro";  // Redirige de nuevo al registro con el mensaje de error
+            return "pacientes/registro";
         }
 
         // Verifica si la identificación ya existe
         Optional<PacienteModel> pacienteExistente = pacienteRepository.findByIdentificacion(identificacion);
         if (pacienteExistente.isPresent()) {
             model.addAttribute("error", "Identificación ya existe");
-            return "pacientes/registro";  // Redirige de nuevo al registro con el mensaje de error
+            return "pacientes/registro";
         }
 
         // Crea un nuevo paciente
         PacienteModel paciente = new PacienteModel();
         paciente.setIdentificacion(identificacion);
         paciente.setNombre(nombre);
-        paciente.setContrasenna(contrasenna);  // Almacenamos la contraseña ingresada
+        paciente.setContrasenna(contrasenna);
 
-        pacienteRepository.save(paciente);  // Guarda el paciente en la base de datos
+        pacienteRepository.save(paciente);
 
         model.addAttribute("mensaje", "Registro exitoso, por favor inicia sesión");
-        return "redirect:/pacientes/login";  // Redirige correctamente al login
-        // Redirige al login después del registro exitoso
+        return "redirect:/pacientes/login";
     }
 
 
@@ -189,7 +188,7 @@ public class PacienteController {
             }
             model.addAttribute("horario", horario.get());
             model.addAttribute("paciente", paciente);
-            model.addAttribute("mostrarPopup", true);  // Bandera para activar el pop-up
+            model.addAttribute("mostrarPopup", true);
 
             // Además, se deben volver a cargar los datos de búsqueda para que la vista tenga toda la información
             List<MedicoModel> medicos = medicoRepository.findAll();
@@ -216,7 +215,7 @@ public class PacienteController {
             model.addAttribute("horarios", horarios);
             model.addAttribute("especialidades", medicoRepository.findDistinctEspecialidades());
 
-            return "pacientes/PacienteBuscarCita"; // Se retorna la misma vista con el pop-up activo
+            return "pacientes/PacienteBuscarCita";
         } else {
             model.addAttribute("error", "Horario no disponible.");
             return "pacientes/PacienteBuscarCita";

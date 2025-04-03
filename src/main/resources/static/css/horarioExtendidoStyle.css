@@ -7,6 +7,7 @@ body {
 }
 
 /* Tarjeta del médico */
+/* Contenedor de la tarjeta del médico */
 .card-medico {
     background-color: #fff;
     border-radius: 10px;
@@ -16,14 +17,38 @@ body {
     max-width: 400px;
 }
 
+/* Contenedor de la imagen y el texto */
+.perfil-container {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espacio entre la imagen y el texto */
+}
+
+/* Imagen de perfil (más pequeña y redondeada) */
+.imagenPerfil {
+    width: 80px; /* Ajusta el tamaño */
+    height: 80px; /* Ajusta el tamaño */
+    border-radius: 50%; /* Hace la imagen redonda */
+    object-fit: cover; /* Asegura que la imagen no se distorsione */
+}
+
+/* Contenedor de texto */
+.textoPerfil {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Título del médico */
 .card-medico h2 {
     color: #2d6a4f;
     margin-bottom: 5px;
 }
 
+/* Párrafos del médico */
 .card-medico p {
     margin: 5px 0;
 }
+
 
 /* Tabla de horarios */
 table {

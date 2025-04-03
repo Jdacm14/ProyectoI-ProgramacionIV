@@ -41,7 +41,6 @@ public class HorarioService {
         return horarioRepository.findByIdentificacion(identificacion);
     }
 
-    // Ver si sirve
     public List<HorarioModel> buscarPorMedico(String medicoID) {
         return horarioRepository.findByMedicoID(medicoID);
     }

@@ -8,17 +8,14 @@ import com.example.proyectoiprogramacioniv.repositories.MedicoRepository;
 import com.example.proyectoiprogramacioniv.repositories.PacienteRepository;
 import com.example.proyectoiprogramacioniv.services.HorarioService;
 import com.example.proyectoiprogramacioniv.services.MedicoService;
-import com.example.proyectoiprogramacioniv.services.PacienteService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
@@ -62,20 +59,20 @@ public class MedicoController {
             // Primero valida la contraseña
             if (!medicoService.validarContrasenna(identificacion, contrasenna)) {
                 model.addAttribute("error", "Contraseña incorrecta");
-                return "medicos/login"; // Mantiene la vista de login con el error
+                return "medicos/login";
             }
 
             // Si la contraseña es correcta, ahora verificar si el médico está activo
             if (!medico.getActivo()) {
                 model.addAttribute("medico", medico);
                 session.setAttribute("tipo", "medico");
-                return "redirect:/medicos/esperaAprobacion"; // Redirige a la vista de espera
+                return "redirect:/medicos/esperaAprobacion";
             }
             // Si no ha especificado la especialidad o su ubicación lo redirige al medicoPerfil
             if(medico.getEspecialidad() == "" || medico.getUbicacion() == "" ) {
                 model.addAttribute("medico", medico);
                 session.setAttribute("tipo", "medico");
-                session.setAttribute("medico", medico); // Agrega esta línea
+                session.setAttribute("medico", medico);
                 return "redirect:/medicos/MedicoPerfil";
             }
 
@@ -83,7 +80,7 @@ public class MedicoController {
             if(medico.getEspecialidad() == null || medico.getUbicacion() == null) {
                 model.addAttribute("medico", medico);
                 session.setAttribute("tipo", "medico");
-                session.setAttribute("medico", medico); // Agrega esta línea
+                session.setAttribute("medico", medico);
                 return "/medicos/MedicoPerfil";
             }
 
@@ -92,12 +89,12 @@ public class MedicoController {
             model.addAttribute("medico", medico);
             session.setAttribute("tipo", "medico");
 
-            session.setAttribute("medico", medico); //Para pasar el medico al medicoPerfil
-            return "redirect:/medicos/MedicoGestionCitas"; // Ahora sí redirige al perfil
+            session.setAttribute("medico", medico);
+            return "redirect:/medicos/MedicoGestionCitas";
           
         } else {
             model.addAttribute("error", "Identificación incorrecta");
-            return "medicos/login"; // Mantiene la vista de login con el error
+            return "medicos/login";
         }
     }
 
@@ -107,7 +104,7 @@ public class MedicoController {
     // Registro de médico
     @GetMapping("medicos/registro")
     public String registro() {
-        return "medicos/registro";  // Muestra la vista de registro
+        return "medicos/registro";
     }
 
     @PostMapping("medicos/registro")
@@ -119,27 +116,27 @@ public class MedicoController {
         // Verifica si las contraseñas coinciden
         if (!contrasenna.equals(confirmarContrasenna)) {
             model.addAttribute("error", "Las contraseñas no coinciden");
-            return "medicos/registro";  // Redirige de nuevo al registro con el mensaje de error
+            return "medicos/registro";
         }
 
         // Verifica si la identificación ya existe
         Optional<MedicoModel> medicoExistente = medicoRepository.findByIdentificacion(identificacion);
         if (medicoExistente.isPresent()) {
             model.addAttribute("error", "Identificación ya existe");
-            return "medicos/registro";  // Redirige de nuevo al registro con el mensaje de error
+            return "medicos/registro";
         }
 
         // Crea un nuevo médico
         MedicoModel medico = new MedicoModel();
         medico.setIdentificacion(identificacion);
         medico.setNombre(nombre);
-        medico.setContrasenna(contrasenna);  // Almacena la contraseña ingresada
+        medico.setContrasenna(contrasenna);
 
-        medicoRepository.save(medico);  // Guarda el médico en la base de datos
+        // Guarda el nuevo medico
+        medicoRepository.save(medico);
 
         model.addAttribute("mensaje", "Registro exitoso, por favor inicia sesión");
-        return "redirect:/medicos/login";  // Redirige correctamente al login
-        // Redirige al login después del registro exitoso
+        return "redirect:/medicos/login";
     }
 
     @GetMapping("medicos/esperaAprobacion")
@@ -181,7 +178,7 @@ public class MedicoController {
          medico.setUbicacion(ubicacion);
          medico.setPresentacion(presentacion);
 
-         medicoRepository.save(medico); //Guarda los cambios en la base de datos
+         medicoRepository.save(medico);
          session.setAttribute("medico", medico);
 
         return "redirect:/medicos/MedicoGestionCitas";
@@ -261,6 +258,9 @@ public class MedicoController {
 
     }
 
+    //------------------------------- Gestion Horarios -----------------------------------------
+
+    // Muestra la vista de Gestion de horarios
     @GetMapping("/medicos/MedicoGestionHorarios")
     public String MedicoGestionHorarios(Model model, HttpSession session) {
         MedicoModel medico = (MedicoModel) session.getAttribute("medico");
@@ -276,6 +276,7 @@ public class MedicoController {
         return "medicos/MedicoGestionHorarios";
     }
 
+    // Maneja la gestión de usuario, maneja la creación de horarios
     @PostMapping("/medicos/MedicoGestionHorarios")
     public String crearHorarios(@RequestParam("fechaSeleccionada") String fecha,
                                 @RequestParam("horaInicio") String horaInicio,
@@ -290,10 +291,10 @@ public class MedicoController {
         // Verificar si el medico está presente en la sesión
         if (medico == null) {
             model.addAttribute("error", "El médico no está logueado.");
-            return "redirect:/medicos/login"; // Redirige al login si no hay sesión de médico
+            return "redirect:/medicos/login";
         }
 
-        String medicoID = medico.getIdentificacion();  // Obtener el ID del médico desde la sesión
+        String medicoID = medico.getIdentificacion();
 
         // Convertir las horas de inicio y fin a objetos LocalTime
         LocalTime inicio = LocalTime.parse(horaInicio);
@@ -308,7 +309,7 @@ public class MedicoController {
         // Llenar la lista con los horarios, respetando la frecuencia
         while (inicio.isBefore(fin)) {
             LocalTime horaFinCita = inicio.plusMinutes(frecuenciaMinutos);
-            if (horaFinCita.isAfter(fin)) break; // Evita que se creen horarios fuera del rango
+            if (horaFinCita.isAfter(fin)) break;
 
             // Validar si el nuevo horario se solapa con algún horario existente
             for (HorarioModel horarioExistente : horariosExistentes) {
@@ -318,20 +319,20 @@ public class MedicoController {
                 // Comprobar si la nueva cita se solapa con una cita existente
                 if (inicio.isBefore(finExistente) && horaFinCita.isAfter(inicioExistente)) {
                     model.addAttribute("error", "El horario choca con una cita existente.");
-                    return "redirect:/medicos/MedicoGestionHorarios";  // Redirige con el mensaje de error
+                    return "redirect:/medicos/MedicoGestionHorarios";
                 }
             }
 
             // Crear un nuevo horario
             HorarioModel horario = new HorarioModel();
-            horario.setId(UUID.randomUUID().toString()); // Generar un ID único para el horario
-            horario.setMedicoID(medicoID);  // Usar el ID del médico desde la sesión
+            horario.setId(UUID.randomUUID().toString());
+            horario.setMedicoID(medicoID);
             horario.setFecha(fecha);
             horario.setHoraInicio(inicio.toString());
             horario.setHoraFin(horaFinCita.toString());
             horario.setPrecio(precio);
             horario.setDiaSemana(LocalDate.parse(fecha).getDayOfWeek().toString());
-            horario.setPacienteID(null); // Este horario está libre hasta que se reserve
+            horario.setPacienteID(null);
 
             // Agregar el horario a la lista
             horariosGenerados.add(horario);
